@@ -30,14 +30,14 @@ jobs:
   
   test:
     runs-on: ubuntu-latest
-    if: jobs.build.outcome == 'success'
+    needs: [build]
     steps:
     - name: Run unit tests
       run: dotnet test --no-build --verbosity normal
 
   deploy-master:
     runs-on: ubuntu-latest
-    if: jobs.test.outcome == 'success'
+    needs: [build, test]
     steps:
     - name: Create pull request
       uses: rematocorp/open-pull-request-action@v1
