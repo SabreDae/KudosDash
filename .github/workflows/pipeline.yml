@@ -1,0 +1,30 @@
+# This is a custom workflow
+name: pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+     runs-on: ubuntu-latest
+
+     steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+        # Ensure any unit-tests are run during application build
+      - name: Test
+        # FIXME: update below command with directory details when unittests have been created
+        run: dotnet test --no-build --verbosity normal
+# TODO: Add integration/security testing stage
+# TODO: Add containerisation stage
+# TODO: Add deployment stage to ensure hosted version will be updated
