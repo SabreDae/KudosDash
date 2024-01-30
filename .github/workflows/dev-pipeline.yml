@@ -20,7 +20,7 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Lint Action
+    - name: Check linting
       uses: wearerequired/lint-action@v2.3.0
       with: 
         auto_fix: false
@@ -30,14 +30,14 @@ jobs:
   
   test:
     runs-on: ubuntu-latest
-    if: steps.build.outcome == 'success'
+    if: jobs.build.outcome == 'success'
     steps:
     - name: Run unit tests
       run: dotnet test --no-build --verbosity normal
 
   deploy-master:
     runs-on: ubuntu-latest
-    if: steps.test.outcome == 'success'
+    if: jobs.test.outcome == 'success'
     steps:
     - name: Create pull request
       uses: rematocorp/open-pull-request-action@v1
