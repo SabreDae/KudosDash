@@ -39,7 +39,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ./Assignment.sln
       - name: Run Snyk for .NET
         uses: snyk/actions/dotnet@master
         env:
