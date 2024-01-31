@@ -43,6 +43,13 @@ jobs:
         with:
           args: --severity-threshold=high --package-manager=nuget --file=Assignment/obj/project.assets.json
           command: test
+      - name: Run Snyk for Node
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+          command: test
 
   deploy-master:
     runs-on: ubuntu-latest
