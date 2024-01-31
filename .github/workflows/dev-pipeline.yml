@@ -34,12 +34,14 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@master
+      - name: Restore dependencies
+        run: dotnet restore
       - name: Run Snyk for .NET
         uses: snyk/actions/dotnet@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high --all-projects
+          args: --severity-threshold=high --package-manager=nuget --all-projects
           command: test
 
   deploy-master:
