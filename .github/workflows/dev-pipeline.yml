@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Setup .NET
-        uses: actions/setup-dotnet@3.0.3
+        uses: actions/setup-dotnet@3
         with:
           dotnet-version: 8.0.x
       - name: Restore dependencies
