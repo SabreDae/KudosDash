@@ -30,8 +30,4 @@ jobs:
         with:
           args: --severity-threshold=high --package-manager=nuget --file=Assignment/obj/project.assets.json --sarif-file-output=snyk.sarif
           command: monitor
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk.sarif
           
