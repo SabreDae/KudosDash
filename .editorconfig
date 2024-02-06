@@ -49,7 +49,7 @@ dotnet_naming_style.pascal_case.capitalization = pascal_case
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4
 indent_size = 4
-end_of_line = crlf
+end_of_line = lf
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
@@ -82,9 +82,10 @@ dotnet_style_qualification_for_field = false:silent
 dotnet_style_qualification_for_property = false:silent
 dotnet_style_qualification_for_method = false:silent
 dotnet_style_qualification_for_event = false:silent
+insert_final_newline = false
 
 [*.cs]
-csharp_indent_labels = one_less_than_current
+csharp_indent_labels = no_change
 csharp_using_directive_placement = outside_namespace:silent
 csharp_prefer_simple_using_statement = true:suggestion
 csharp_prefer_braces = true:silent
