@@ -1,0 +1,37 @@
+# This is a custom workflow to run security scans on a weekly cadence
+name: prod-monitor
+
+on:
+  schedule:
+  - cron: '0 11 * * 2'
+
+jobs:
+  secrets-check:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Run Snyk for .NET
+        uses: snyk/actions/dotnet@master
+        continue-on-error: true # To make sure that SARIF upload gets called
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --package-manager=nuget --file=Assignment/obj/project.assets.json --sarif-file-output=snyk.sarif
+          command: monitor
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+          
