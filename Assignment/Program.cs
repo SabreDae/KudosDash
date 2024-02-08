@@ -1,18 +1,31 @@
 using Assignment.Data;
+using Assignment.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole(); 
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-	options.UseSqlServer(connectionString));
+	options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-	.AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<AppUser, IdentityRole>(
+	options => {
+		options.SignIn.RequireConfirmedAccount = false;
+		options.Password.RequireUppercase = true;
+		options.Password.RequireLowercase = true;
+		options.Password.RequireDigit = true;
+		options.Password.RequiredLength = 8;
+		options.Password.RequireNonAlphanumeric = false;
+		}
+	)
+	.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
