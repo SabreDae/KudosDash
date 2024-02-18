@@ -33,5 +33,5 @@ namespace Assignment.Models.Users
 		[Required(ErrorMessage = "Please enter a password")]
 		[DataType(DataType.Password)]
 		public string? ConfirmNewPassword { get; set; }
-		}
+	}
 }

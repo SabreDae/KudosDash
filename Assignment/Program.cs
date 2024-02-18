@@ -8,9 +8,9 @@ using System.Net;
 namespace Assignment
 {
 	public class Program
+	{
+		public static async Task Main(string[] args)
 		{
-		public static async Task Main (string[] args)
-			{
 			var builder = WebApplication.CreateBuilder(args);
 			builder.Logging.ClearProviders();
 			builder.Logging.AddConsole();
@@ -22,7 +22,8 @@ namespace Assignment
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 			builder.Services.AddIdentity<AppUser, IdentityRole>(
-				options => {
+				options =>
+				{
 					// FIXME: Confirmed Account set to false during development; set to true for production
 					options.SignIn.RequireConfirmedAccount = false;
 					// Password complexity rules
@@ -56,15 +57,15 @@ namespace Assignment
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
-				{
+			{
 				app.UseMigrationsEndPoint();
-				}
+			}
 			else
-				{
+			{
 				app.UseExceptionHandler("/Home/Error");
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
-				}
+			}
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
@@ -80,17 +81,17 @@ namespace Assignment
 			app.MapRazorPages();
 
 			using (var scope = app.Services.CreateScope())
-				{
+			{
 				var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 				// Seed roles on App launch in every environment
 				var roles = new string[] { "Admin", "Manager", "Team Member" };
 				foreach (var role in roles)
-					{
+				{
 					if (!await roleManager.RoleExistsAsync(role))
 						// If role does not already exist, create it
 						await roleManager.CreateAsync(new IdentityRole(role));
-					}
 				}
+			}
 			//using (var scope = app.Services.CreateScope())
 			//	{
 			//	/* 
@@ -108,7 +109,6 @@ namespace Assignment
 			//	}
 
 			app.Run();
-			}
 		}
 	}
-
+}

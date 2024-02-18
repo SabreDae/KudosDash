@@ -12,10 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Assignment.Tests.Unit
-	{
+{
 	[TestFixture]
 	public class AccountControllerTests
-		{
+	{
 
 		private AccountController _accountController;
 		private SignInManager<AppUser> _signInManager;
@@ -25,8 +25,8 @@ namespace Assignment.Tests.Unit
 		private SqliteConnection sqliteConnection;
 
 		[SetUp]
-		public void SetUp ()
-			{
+		public void SetUp()
+		{
 			// Build service colection to create identity UserManager and RoleManager.           
 			IServiceCollection serviceCollection = new ServiceCollection();
 
@@ -49,19 +49,19 @@ namespace Assignment.Tests.Unit
 				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
 			IConfigurationRoot configuration = builder.Build();
-			}
+		}
 
 		[TearDown]
-		public void TearDown ()
-			{
+		public void TearDown()
+		{
 			_context.Database.EnsureDeleted();
 			_context.Dispose();
 			sqliteConnection.Close();
-			}
+		}
 
 		[Test]
-		public void AccountController_Register_ReturnsSuccess ()
-			{
+		public void AccountController_Register_ReturnsSuccess()
+		{
 			// Arrange
 			_accountController = new AccountController(_signInManager, _userManager, _context);
 
@@ -70,11 +70,11 @@ namespace Assignment.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-			}
+		}
 
 		[Test]
-		public void AccountController_Login_ReturnsSuccess ()
-			{
+		public void AccountController_Login_ReturnsSuccess()
+		{
 			// Arrange
 			_accountController = new AccountController(_signInManager, _userManager, _context);
 
@@ -84,11 +84,11 @@ namespace Assignment.Tests.Unit
 			// Assert
 			result.Should().BeOfType<ViewResult>();
 
-			}
+		}
 
 		[Test]
-		public void AccountController_Details_NoUser_ReturnsFailure ()
-			{
+		public void AccountController_Details_NoUser_ReturnsFailure()
+		{
 			// Arrange
 			_accountController = new AccountController(_signInManager, _userManager, _context);
 
@@ -97,17 +97,17 @@ namespace Assignment.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
-			}
+		}
 
 		[Test]
-		public void AccountController_Register_NewUser_Success ()
-			{
+		public void AccountController_Register_NewUser_Success()
+		{
 			// Arrange
 			_accountController = new AccountController(_signInManager, _userManager, _context);
 
 			// Simulate user input
 			var testUser = new RegisterVM
-				{
+			{
 				FirstName = "Testing",
 				LastName = "Test",
 				TeamName = "Test",
@@ -115,42 +115,42 @@ namespace Assignment.Tests.Unit
 				Email = "test@test.com",
 				Password = "Test1234",
 				ConfirmPassword = "Test1234"
-				};
+			};
 
 			// Act 
 			var result = _accountController.Register(testUser);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test, Order(1)]
 		// Flaky test - only passes if run before the above Register test
-		public void AccountController_Register_NewUser_UnconfirmedPassword ()
-			{
+		public void AccountController_Register_NewUser_UnconfirmedPassword()
+		{
 			// Arrange
 			_accountController = new AccountController(_signInManager, _userManager, _context);
 			// Simulate user input
 			var testUser = new RegisterVM
-				{
+			{
 				FirstName = "Test",
 				LastName = "Test",
 				TeamName = "Test",
 				Role = "Admin",
 				Email = "test@test.com",
 				Password = "Test1234"
-				};
+			};
 
 			// Act 
 			var result = _accountController.Register(testUser);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
-			}
+		}
 
 		[Test]
-		public void AccountController_Login_UserSuccess ()
-			{
+		public void AccountController_Login_UserSuccess()
+		{
 			// Arrange
 			_userManager = A.Fake<UserManager<AppUser>>();
 			_signInManager = A.Fake<SignInManager<AppUser>>();
@@ -158,28 +158,28 @@ namespace Assignment.Tests.Unit
 
 			// Create new user
 			var testUser = new AppUser()
-				{
+			{
 				FirstName = "Test",
 				LastName = "Test",
 				Role = "Admin",
 				Email = "test@test.com",
 				UserName = "test@test.com"
-				};
+			};
 
 			_userManager.CreateAsync(testUser, "Test1234");
 
 			var loginUser = new LoginVM()
-				{
+			{
 				Email = testUser.Email,
 				Password = "Test1234",
 				RememberMe = false
-				};
+			};
 
 			// Act 
 			var result = _accountController.Login(loginUser);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
 		}
 	}
+}

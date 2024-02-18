@@ -12,8 +12,8 @@ namespace Assignment.Data
 			: base(options)
 		{
 		}
-		
-		public DbSet<AppUser> Account {  get; set; }
+
+		public DbSet<AppUser> Account { get; set; }
 
 		public DbSet<Feedback> Feedback { get; set; }
 
