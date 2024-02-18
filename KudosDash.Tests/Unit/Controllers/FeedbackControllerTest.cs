@@ -12,17 +12,17 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace KudosDash.Tests.Unit
-	{
+{
 	[TestFixture]
 	public class FeedbackControllerTests
-		{
+	{
 		private FeedbackController _feedbackController;
 		private ApplicationDbContext _context;
 		private SqliteConnection sqliteConnection;
 
 		[SetUp]
-		public void SetUp ()
-			{
+		public void SetUp()
+		{
 			// Build service colection to create identity UserManager and RoleManager.           
 			IServiceCollection serviceCollection = new ServiceCollection();
 
@@ -45,19 +45,19 @@ namespace KudosDash.Tests.Unit
 				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
 			IConfigurationRoot configuration = builder.Build();
-			}
+		}
 
 		[TearDown]
-		public void TearDown ()
-			{
+		public void TearDown()
+		{
 			_context.Database.EnsureDeleted();
 			_context.Dispose();
 			sqliteConnection.Close();
-			}
+		}
 
 		[Test]
 		public void FeedbackController_Create_ReturnsSuccess()
-			{
+		{
 			// Arrange
 			_feedbackController = new FeedbackController(_context);
 
@@ -66,6 +66,6 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-			}
 		}
 	}
+}
