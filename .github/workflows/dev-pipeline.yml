@@ -41,7 +41,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high --package-manager=nuget --file=Assignment/obj/project.assets.json
+          args: --severity-threshold=high --package-manager=nuget --file=KudosDash/obj/project.assets.json
           command: test
       - name: Run Snyk for Node
         uses: snyk/actions/node@master
