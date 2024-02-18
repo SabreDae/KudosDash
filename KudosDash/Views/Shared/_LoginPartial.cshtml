@@ -1,0 +1,27 @@
+﻿@using KudosDash.Models.Users
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> signInManager
+@inject UserManager<AppUser> userManager
+
+<ul class="navbar-nav">
+@if (signInManager.IsSignedIn(User))
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navdrop" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@User.Identity?.Name!</a>
+        <div class="dropdown-menu" aria-labelledby="navdrop">
+            <a class="dropdown-item text-dark">Dashboard</a>
+            <a class="dropdown-item text-dark" asp-action="Details" asp-controller="Account">Account</a>
+            <a class="dropdown-item text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
+        </div>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+    </li>
+}
+</ul>
