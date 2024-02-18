@@ -6,24 +6,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KudosDash.Controllers
 	{
-	// Ensure only logged in users are able to access Feedback views/model
-	[Authorize]
-	public class FeedbackController : Controller
+	public class TeamsController : Controller
 		{
 		private readonly ApplicationDbContext _context;
 
-		public FeedbackController (ApplicationDbContext context)
+		public TeamsController (ApplicationDbContext context)
 			{
 			_context = context;
 			}
 
-		// GET: Feedback Index page view
+		// GET: Teams
+		// Only admins will have access to viewing and editing all teams, managers will be able to access information for their own team only
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Index ()
 			{
-			return View(await _context.Feedback.ToListAsync());
+			return View(await _context.Teams.ToListAsync());
 			}
 
-		// GET: Feedback/Details/5
+		// GET: Teams/Details/5
+		[Authorize(Roles = "Admin,Manager")]
 		public async Task<IActionResult> Details (int? id)
 			{
 			if (id == null)
@@ -31,39 +32,40 @@ namespace KudosDash.Controllers
 				return NotFound();
 				}
 
-			var feedback = await _context.Feedback
-				.FirstOrDefaultAsync(m => m.ID == id);
-			if (feedback == null)
+			var teams = await _context.Teams
+				.FirstOrDefaultAsync(m => m.TeamId == id);
+			if (teams == null)
 				{
 				return NotFound();
 				}
 
-			return View(feedback);
+			return View(teams);
 			}
 
-		// GET: Feedback/Create
+		// GET: Teams/Create
 		public IActionResult Create ()
 			{
 			return View();
 			}
 
-		// POST: Feedback/Create
+		// POST: Teams/Create
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create ([Bind("ID,Author,TargetUser,FeedbackDate,FeedbackText")] Feedback feedback)
+		public async Task<IActionResult> Create ([Bind("TeamId,TeamName")] Teams teams)
 			{
 			if (ModelState.IsValid)
 				{
-				_context.Add(feedback);
+				_context.Add(teams);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 				}
-			return View(feedback);
+			return View(teams);
 			}
 
-		// GET: Feedback/Edit/5
+		// GET: Teams/Edit/5
+		[Authorize(Roles = "Admin,Manager")]
 		public async Task<IActionResult> Edit (int? id)
 			{
 			if (id == null)
@@ -71,22 +73,23 @@ namespace KudosDash.Controllers
 				return NotFound();
 				}
 
-			var feedback = await _context.Feedback.FindAsync(id);
-			if (feedback == null)
+			var teams = await _context.Teams.FindAsync(id);
+			if (teams == null)
 				{
 				return NotFound();
 				}
-			return View(feedback);
+			return View(teams);
 			}
 
-		// POST: Feedback/Edit/5
+		// POST: Teams/Edit/5
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit (int id, [Bind("ID,Author,TargetUser,FeedbackDate,FeedbackText")] Feedback feedback)
+		[Authorize(Roles = "Admin,Manager")]
+		public async Task<IActionResult> Edit (int id, [Bind("TeamId,TeamName")] Teams teams)
 			{
-			if (id != feedback.ID)
+			if (id != teams.TeamId)
 				{
 				return NotFound();
 				}
@@ -95,12 +98,12 @@ namespace KudosDash.Controllers
 				{
 				try
 					{
-					_context.Update(feedback);
+					_context.Update(teams);
 					await _context.SaveChangesAsync();
 					}
 				catch (DbUpdateConcurrencyException)
 					{
-					if (!FeedbackExists(feedback.ID))
+					if (!TeamsExists(teams.TeamId))
 						{
 						return NotFound();
 						}
@@ -111,10 +114,11 @@ namespace KudosDash.Controllers
 					}
 				return RedirectToAction(nameof(Index));
 				}
-			return View(feedback);
+			return View(teams);
 			}
 
-		// GET: Feedback/Delete/5
+		// GET: Teams/Delete/5
+		[Authorize(Roles = "Admin,Manager")]
 		public async Task<IActionResult> Delete (int? id)
 			{
 			if (id == null)
@@ -122,34 +126,35 @@ namespace KudosDash.Controllers
 				return NotFound();
 				}
 
-			var feedback = await _context.Feedback
-				.FirstOrDefaultAsync(m => m.ID == id);
-			if (feedback == null)
+			var teams = await _context.Teams
+				.FirstOrDefaultAsync(m => m.TeamId == id);
+			if (teams == null)
 				{
 				return NotFound();
 				}
 
-			return View(feedback);
+			return View(teams);
 			}
 
-		// POST: Feedback/Delete/5
+		// POST: Teams/Delete/5
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin,Manager")]
 		public async Task<IActionResult> DeleteConfirmed (int id)
 			{
-			var feedback = await _context.Feedback.FindAsync(id);
-			if (feedback != null)
+			var teams = await _context.Teams.FindAsync(id);
+			if (teams != null)
 				{
-				_context.Feedback.Remove(feedback);
+				_context.Teams.Remove(teams);
 				}
 
 			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
 			}
 
-		private bool FeedbackExists (int id)
+		private bool TeamsExists (int id)
 			{
-			return _context.Feedback.Any(e => e.ID == id);
+			return _context.Teams.Any(e => e.TeamId == id);
 			}
 		}
 	}

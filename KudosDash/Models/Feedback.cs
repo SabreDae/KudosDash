@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Assignment.Models
+namespace KudosDash.Models
 	{
 	public class Feedback
 		{
