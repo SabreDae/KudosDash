@@ -92,21 +92,6 @@ namespace Assignment
 						await roleManager.CreateAsync(new IdentityRole(role));
 				}
 			}
-			//using (var scope = app.Services.CreateScope())
-			//	{
-			//	/* 
-			//	 On App launch, check for whether the Admin account exists in the database.
-			//	 If it does not, create the required account and give it the Admin role.
-			//	*/
-			//	var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-			//	string adminEmail = "s.e.forsyth@hotmail.co.uk";
-			//	var user = await userManager.FindByEmailAsync(adminEmail);
-			//	if (user != null)
-			//		{
-			//		Console.WriteLine("user exists");
-			//		await userManager.AddToRoleAsync(user, "Admin");
-			//		}
-			//	}
 
 			app.Run();
 		}

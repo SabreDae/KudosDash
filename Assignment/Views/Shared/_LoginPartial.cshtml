@@ -1,26 +1,27 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+﻿@using Assignment.Models.Users
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> signInManager
+@inject UserManager<AppUser> userManager
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
+@if (signInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navdrop" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@User.Identity?.Name!</a>
+        <div class="dropdown-menu" aria-labelledby="navdrop">
+            <a class="dropdown-item text-dark">Dashboard</a>
+            <a class="dropdown-item text-dark" asp-action="Details" asp-controller="Account">Account</a>
+            <a class="dropdown-item text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
+        </div>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
     </li>
 }
 </ul>
