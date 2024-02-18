@@ -1,4 +1,4 @@
-namespace Assignment.Models
+namespace KudosDash.Models
 {
 	public class ErrorViewModel
 	{

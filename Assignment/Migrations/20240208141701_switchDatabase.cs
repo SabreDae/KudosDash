@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Assignment.Migrations
+namespace KudosDash.Migrations
 {
 	/// <inheritdoc />
 	public partial class switchDatabase : Migration

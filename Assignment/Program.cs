@@ -1,11 +1,11 @@
-using Assignment.Data;
-using Assignment.Models.Users;
+using KudosDash.Data;
+using KudosDash.Models.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace Assignment
+namespace KudosDash
 {
 	public class Program
 	{

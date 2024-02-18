@@ -1,6 +1,6 @@
-using Assignment.Controllers;
-using Assignment.Data;
-using Assignment.Models.Users;
+using KudosDash.Controllers;
+using KudosDash.Data;
+using KudosDash.Models.Users;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace Assignment.Tests.Unit
+namespace KudosDash.Tests.Unit
 {
 	[TestFixture]
 	public class AccountControllerTests

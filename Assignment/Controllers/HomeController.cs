@@ -1,8 +1,8 @@
-using Assignment.Models;
+using KudosDash.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace Assignment.Controllers
+namespace KudosDash.Controllers
 {
 	public class HomeController : Controller
 	{

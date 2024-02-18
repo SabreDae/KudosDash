@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Assignment.Models.Users
+namespace KudosDash.Models.Users
 {
 	public class AppUser : IdentityUser
 	{

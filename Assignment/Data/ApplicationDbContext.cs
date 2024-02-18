@@ -1,10 +1,10 @@
-﻿using Assignment.Models;
-using Assignment.Models.Users;
+﻿using KudosDash.Models;
+using KudosDash.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Assignment.Data
+namespace KudosDash.Data
 {
 	public class ApplicationDbContext : IdentityDbContext<AppUser>
 	{

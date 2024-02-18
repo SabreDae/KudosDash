@@ -30,7 +30,7 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Assignment\Assignment.csproj" />
+    <ProjectReference Include="..\Assignment\KudosDash.csproj" />
   </ItemGroup>
 
   <ItemGroup>

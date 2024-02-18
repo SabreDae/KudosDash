@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Assignment.Models.Users
+namespace KudosDash.Models.Users
 {
 	public class LoginVM
 	{
