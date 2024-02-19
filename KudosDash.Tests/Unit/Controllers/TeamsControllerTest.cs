@@ -1,29 +1,28 @@
-﻿using KudosDash.Controllers;
+﻿using FluentAssertions;
+using KudosDash.Controllers;
 using KudosDash.Data;
+using KudosDash.Models;
 using KudosDash.Models.Users;
-using FakeItEasy;
-using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using KudosDash.Models;
 
 namespace KudosDash.Tests.Unit
-{
+	{
 	[TestFixture]
 	public class TeamsControllerTests
-	{
+		{
 		private TeamsController _teamsController;
 		private ApplicationDbContext _context;
 		private SqliteConnection sqliteConnection;
 
 		[SetUp]
-		public void SetUp()
-		{
+		public void SetUp ()
+			{
 			// Build service colection to create identity UserManager and RoleManager.           
 			IServiceCollection serviceCollection = new ServiceCollection();
 
@@ -46,19 +45,19 @@ namespace KudosDash.Tests.Unit
 				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
 			IConfigurationRoot configuration = builder.Build();
-		}
+			}
 
 		[TearDown]
-		public void TearDown()
-		{
+		public void TearDown ()
+			{
 			_context.Database.EnsureDeleted();
 			_context.Dispose();
 			sqliteConnection.Close();
-		}
+			}
 
 		[Test]
-		public void TeamsController_Create_ReturnsSuccessful()
-		{
+		public void TeamsController_Create_ReturnsSuccessful ()
+			{
 			// Arrange
 			_teamsController = new TeamsController(_context);
 
@@ -67,45 +66,45 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-		}
+			}
 
 		[Test]
-		public void TeamsController_Create_NewTeam_ReturnsSuccessful()
-		{
+		public void TeamsController_Create_NewTeam_ReturnsSuccessful ()
+			{
 			// Arrange
 			_teamsController = new TeamsController(_context);
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
 				TeamName = "Test"
-			};
+				};
 
 			// Act
 			var result = _teamsController.Create(team);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-		}
+			}
 
 		[Test]
-		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure()
-		{
+		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure ()
+			{
 			_teamsController = new TeamsController(_context);
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
-			};
+				};
 
 			// Act
 			var result = _teamsController.Create(team);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
-		}
+			}
 
 		[Test]
-		public void TeamsController_Index_ReturnsSuccess()
-		{
+		public void TeamsController_Index_ReturnsSuccess ()
+			{
 			// Arrange
 			_teamsController = new TeamsController(_context);
 
@@ -114,6 +113,6 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			}
 		}
 	}
-}
