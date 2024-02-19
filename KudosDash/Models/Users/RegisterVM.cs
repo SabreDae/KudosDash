@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace KudosDash.Models.Users
-{
-	public class RegisterVM
 	{
+	public class RegisterVM
+		{
 		[Required]
 		[Display(Name = "First Name")]
 		public string? FirstName { get; set; }
@@ -13,12 +12,11 @@ namespace KudosDash.Models.Users
 		[Display(Name = "Last Name")]
 		public string? LastName { get; set; }
 
-		[Required]
 		[Display(Name = "Team")]
-		public string? TeamName { get; set; }
+		public Teams? TeamId { get; set; }
 
-		[Required(ErrorMessage = "Please choose a role from the list.")]
-		public string Role { get; set; }
+		[Required]
+		public string? Role { get; set; }
 
 		[Required]
 		[DataType(DataType.EmailAddress)]
@@ -34,5 +32,5 @@ namespace KudosDash.Models.Users
 		[Display(Name = "Re-enter password")]
 		public string? ConfirmPassword { get; set; }
 
+		}
 	}
-}
