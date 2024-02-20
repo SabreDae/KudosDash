@@ -1,16 +1,15 @@
-﻿using KudosDash.Controllers;
+﻿using FluentAssertions;
+using KudosDash.Controllers;
 using KudosDash.Data;
+using KudosDash.Models;
 using KudosDash.Models.Users;
-using FakeItEasy;
-using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using KudosDash.Models;
 
 namespace KudosDash.Tests.Unit
 	{
@@ -57,7 +56,7 @@ namespace KudosDash.Tests.Unit
 			}
 
 		[Test]
-		public void TeamsController_Create_ReturnsSuccessful()
+		public void TeamsController_Create_ReturnsSuccessful ()
 			{
 			// Arrange
 			_teamsController = new TeamsController(_context);
@@ -70,7 +69,7 @@ namespace KudosDash.Tests.Unit
 			}
 
 		[Test]
-		public void TeamsController_Create_NewTeam_ReturnsSuccessful()
+		public void TeamsController_Create_NewTeam_ReturnsSuccessful ()
 			{
 			// Arrange
 			_teamsController = new TeamsController(_context);
@@ -88,7 +87,7 @@ namespace KudosDash.Tests.Unit
 			}
 
 		[Test]
-		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure()
+		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure ()
 			{
 			_teamsController = new TeamsController(_context);
 			var team = new Teams()
@@ -104,7 +103,7 @@ namespace KudosDash.Tests.Unit
 			}
 
 		[Test]
-		public void TeamsController_Index_ReturnsSuccess()
+		public void TeamsController_Index_ReturnsSuccess ()
 			{
 			// Arrange
 			_teamsController = new TeamsController(_context);

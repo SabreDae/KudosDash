@@ -43,6 +43,7 @@ namespace KudosDash.Controllers
 			}
 
 		// GET: Teams/Create
+		[Authorize(Roles = "Admin,Manager")]
 		public IActionResult Create ()
 			{
 			return View();
@@ -52,6 +53,7 @@ namespace KudosDash.Controllers
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
+		[Authorize(Roles = "Admin,Manager")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create ([Bind("TeamId,TeamName")] Teams teams)
 			{

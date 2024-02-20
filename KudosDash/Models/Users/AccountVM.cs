@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace KudosDash.Models.Users
-{
-	public class AccountVM
 	{
+	public class AccountVM
+		{
 		public string Id { get; set; }
 
 		[Required]
@@ -33,5 +33,5 @@ namespace KudosDash.Models.Users
 		[Required(ErrorMessage = "Please enter a password")]
 		[DataType(DataType.Password)]
 		public string? ConfirmNewPassword { get; set; }
+		}
 	}
-}

@@ -1,12 +1,11 @@
-﻿using KudosDash.Controllers;
+﻿using FluentAssertions;
+using KudosDash.Controllers;
 using KudosDash.Data;
 using KudosDash.Models.Users;
-using FakeItEasy;
-using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -19,6 +18,8 @@ namespace KudosDash.Tests.Unit
 		private FeedbackController _feedbackController;
 		private ApplicationDbContext _context;
 		private SqliteConnection sqliteConnection;
+		private UserManager<AppUser> _userManager;
+		private SignInManager<AppUser> _signInManager;
 
 		[SetUp]
 		public void SetUp ()
@@ -56,16 +57,30 @@ namespace KudosDash.Tests.Unit
 			}
 
 		[Test]
-		public void FeedbackController_Create_ReturnsSuccess()
+		public void FeedbackController_Create_ReturnsSuccess ()
 			{
 			// Arrange
-			_feedbackController = new FeedbackController(_context);
+			_feedbackController = new FeedbackController(_context, _userManager);
 
 			// Act
 			var result = _feedbackController.Create();
 
 			// Assert
-			result.Should().BeOfType<ViewResult>();
+			result.Should().BeOfType<Task<IActionResult>>();
+			}
+
+		[Test]
+		public void FeedbackController_Index_ReturnsSuccess ()
+			{
+			// Arrange
+			_feedbackController = new FeedbackController(_context, _userManager);
+
+			// Act
+			var result = _feedbackController.Index();
+
+			// Assert
+			result.Should().BeOfType<Task<IActionResult>>();
+
 			}
 		}
 	}

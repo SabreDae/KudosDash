@@ -1,38 +1,72 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace KudosDash.Migrations
-{
-	/// <inheritdoc />
-	public partial class switchDatabase : Migration
 	{
-		/// <inheritdoc />
-		protected override void Up(MigrationBuilder migrationBuilder)
+	/// <inheritdoc />
+	public partial class InitialMigration : Migration
 		{
+		/// <inheritdoc />
+		protected override void Up (MigrationBuilder migrationBuilder)
+			{
 			migrationBuilder.CreateTable(
 				name: "AspNetRoles",
 				columns: table => new
-				{
+					{
 					Id = table.Column<string>(type: "TEXT", nullable: false),
 					Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
 					NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
 					ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
-				},
+					},
 				constraints: table =>
 				{
 					table.PrimaryKey("PK_AspNetRoles", x => x.Id);
 				});
 
 			migrationBuilder.CreateTable(
+				name: "Teams",
+				columns: table => new
+					{
+					TeamId = table.Column<int>(type: "INTEGER", nullable: false)
+						.Annotation("Sqlite:Autoincrement", true),
+					TeamName = table.Column<string>(type: "TEXT", nullable: false)
+					},
+				constraints: table =>
+				{
+					table.PrimaryKey("PK_Teams", x => x.TeamId);
+				});
+
+			migrationBuilder.CreateTable(
+				name: "AspNetRoleClaims",
+				columns: table => new
+					{
+					Id = table.Column<int>(type: "INTEGER", nullable: false)
+						.Annotation("Sqlite:Autoincrement", true),
+					RoleId = table.Column<string>(type: "TEXT", nullable: false),
+					ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+					ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+					},
+				constraints: table =>
+				{
+					table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+					table.ForeignKey(
+						name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+						column: x => x.RoleId,
+						principalTable: "AspNetRoles",
+						principalColumn: "Id",
+						onDelete: ReferentialAction.Cascade);
+				});
+
+			migrationBuilder.CreateTable(
 				name: "AspNetUsers",
 				columns: table => new
-				{
+					{
 					Id = table.Column<string>(type: "TEXT", nullable: false),
 					FirstName = table.Column<string>(type: "TEXT", nullable: false),
 					LastName = table.Column<string>(type: "TEXT", nullable: false),
-					TeamName = table.Column<string>(type: "TEXT", nullable: false),
+					TeamId = table.Column<int>(type: "INTEGER", nullable: true),
+					Role = table.Column<string>(type: "TEXT", nullable: false),
 					UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
 					NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
 					Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -47,59 +81,27 @@ namespace KudosDash.Migrations
 					LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
 					LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
 					AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
-				},
+					},
 				constraints: table =>
 				{
 					table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-				});
-
-			migrationBuilder.CreateTable(
-				name: "Feedback",
-				columns: table => new
-				{
-					ID = table.Column<int>(type: "INTEGER", nullable: false)
-						.Annotation("Sqlite:Autoincrement", true),
-					Author = table.Column<string>(type: "TEXT", nullable: false),
-					TargetUser = table.Column<string>(type: "TEXT", nullable: false),
-					FeedbackDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-					FeedbackText = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false)
-				},
-				constraints: table =>
-				{
-					table.PrimaryKey("PK_Feedback", x => x.ID);
-				});
-
-			migrationBuilder.CreateTable(
-				name: "AspNetRoleClaims",
-				columns: table => new
-				{
-					Id = table.Column<int>(type: "INTEGER", nullable: false)
-						.Annotation("Sqlite:Autoincrement", true),
-					RoleId = table.Column<string>(type: "TEXT", nullable: false),
-					ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-					ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
-				},
-				constraints: table =>
-				{
-					table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
 					table.ForeignKey(
-						name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-						column: x => x.RoleId,
-						principalTable: "AspNetRoles",
-						principalColumn: "Id",
-						onDelete: ReferentialAction.Cascade);
+						name: "FK_AspNetUsers_Teams_TeamId",
+						column: x => x.TeamId,
+						principalTable: "Teams",
+						principalColumn: "TeamId");
 				});
 
 			migrationBuilder.CreateTable(
 				name: "AspNetUserClaims",
 				columns: table => new
-				{
+					{
 					Id = table.Column<int>(type: "INTEGER", nullable: false)
 						.Annotation("Sqlite:Autoincrement", true),
 					UserId = table.Column<string>(type: "TEXT", nullable: false),
 					ClaimType = table.Column<string>(type: "TEXT", nullable: true),
 					ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
-				},
+					},
 				constraints: table =>
 				{
 					table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
@@ -114,12 +116,12 @@ namespace KudosDash.Migrations
 			migrationBuilder.CreateTable(
 				name: "AspNetUserLogins",
 				columns: table => new
-				{
+					{
 					LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
 					ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
 					ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
 					UserId = table.Column<string>(type: "TEXT", nullable: false)
-				},
+					},
 				constraints: table =>
 				{
 					table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
@@ -134,10 +136,10 @@ namespace KudosDash.Migrations
 			migrationBuilder.CreateTable(
 				name: "AspNetUserRoles",
 				columns: table => new
-				{
+					{
 					UserId = table.Column<string>(type: "TEXT", nullable: false),
 					RoleId = table.Column<string>(type: "TEXT", nullable: false)
-				},
+					},
 				constraints: table =>
 				{
 					table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
@@ -158,12 +160,12 @@ namespace KudosDash.Migrations
 			migrationBuilder.CreateTable(
 				name: "AspNetUserTokens",
 				columns: table => new
-				{
+					{
 					UserId = table.Column<string>(type: "TEXT", nullable: false),
 					LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
 					Name = table.Column<string>(type: "TEXT", nullable: false),
 					Value = table.Column<string>(type: "TEXT", nullable: true)
-				},
+					},
 				constraints: table =>
 				{
 					table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
@@ -173,6 +175,28 @@ namespace KudosDash.Migrations
 						principalTable: "AspNetUsers",
 						principalColumn: "Id",
 						onDelete: ReferentialAction.Cascade);
+				});
+
+			migrationBuilder.CreateTable(
+				name: "Feedback",
+				columns: table => new
+					{
+					ID = table.Column<int>(type: "INTEGER", nullable: false)
+						.Annotation("Sqlite:Autoincrement", true),
+					Author = table.Column<string>(type: "TEXT", nullable: false),
+					TargetUser = table.Column<string>(type: "TEXT", nullable: false),
+					UserId = table.Column<string>(type: "TEXT", nullable: true),
+					FeedbackDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+					FeedbackText = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false)
+					},
+				constraints: table =>
+				{
+					table.PrimaryKey("PK_Feedback", x => x.ID);
+					table.ForeignKey(
+						name: "FK_Feedback_AspNetUsers_UserId",
+						column: x => x.UserId,
+						principalTable: "AspNetUsers",
+						principalColumn: "Id");
 				});
 
 			migrationBuilder.CreateIndex(
@@ -207,15 +231,25 @@ namespace KudosDash.Migrations
 				column: "NormalizedEmail");
 
 			migrationBuilder.CreateIndex(
+				name: "IX_AspNetUsers_TeamId",
+				table: "AspNetUsers",
+				column: "TeamId");
+
+			migrationBuilder.CreateIndex(
 				name: "UserNameIndex",
 				table: "AspNetUsers",
 				column: "NormalizedUserName",
 				unique: true);
-		}
+
+			migrationBuilder.CreateIndex(
+				name: "IX_Feedback_UserId",
+				table: "Feedback",
+				column: "UserId");
+			}
 
 		/// <inheritdoc />
-		protected override void Down(MigrationBuilder migrationBuilder)
-		{
+		protected override void Down (MigrationBuilder migrationBuilder)
+			{
 			migrationBuilder.DropTable(
 				name: "AspNetRoleClaims");
 
@@ -239,6 +273,9 @@ namespace KudosDash.Migrations
 
 			migrationBuilder.DropTable(
 				name: "AspNetUsers");
+
+			migrationBuilder.DropTable(
+				name: "Teams");
+			}
 		}
 	}
-}

@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cy:run": "cypress run",
+    "run-dotnet": "cd KudosDash && dotnet run",
+    "test": "concurrently \"npm run run-dotnet\" \"npx wait-on https://localhost:7197 && npm run cy:run\" --kill-other --success first"
   },
   "author": "SabreDae",
   "license": "ISC",
-  "devDependencies": {},
   "dependencies": {
-    "cypress": "^13.6.3"
+    "ckeditor4": "^4.24.0",
+    "concurrently": "^8.2.2",
+    "cypress": "^13.6.4",
+    "wait-on": "^7.2.0"
   }
 }

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using KudosDash.Models.Users;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KudosDash.Models
 	{
@@ -8,10 +10,14 @@ namespace KudosDash.Models
 		public int ID { get; set; }
 
 		[Required]
-		public string Author { get; set; }
+		[ForeignKey("AppUser")]
+		public string? Author { get; set; }
 
 		[Required]
-		public string TargetUser { get; set; }
+		[ForeignKey("AppUser")]
+		public string? TargetUser { get; set; }
+
+		public virtual AppUser? User { get; set; }
 
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
