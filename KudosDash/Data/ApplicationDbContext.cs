@@ -17,5 +17,6 @@ namespace KudosDash.Data
 		public DbSet<Feedback> Feedback { get; set; }
 
 		public DbSet<Teams> Teams { get; set; }
+	    public DbSet<KudosDash.Models.Users.AccountVM> AccountVM { get; set; } = default!;
 		}
 	}

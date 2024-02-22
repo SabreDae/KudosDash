@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace KudosDash.Models.Users
-	{
+{
 	public class RegisterVM
-		{
+	{
 		[Required]
 		[Display(Name = "First Name")]
 		public string? FirstName { get; set; }
@@ -32,5 +32,5 @@ namespace KudosDash.Models.Users
 		[Display(Name = "Re-enter password")]
 		public string? ConfirmPassword { get; set; }
 
-		}
 	}
+}
