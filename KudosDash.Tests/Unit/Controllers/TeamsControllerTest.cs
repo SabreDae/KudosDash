@@ -1,28 +1,37 @@
-﻿using FluentAssertions;
+﻿using FakeItEasy;
+using FluentAssertions;
 using KudosDash.Controllers;
 using KudosDash.Data;
 using KudosDash.Models;
 using KudosDash.Models.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
 using NUnit.Framework;
 
 namespace KudosDash.Tests.Unit
-	{
+{
 	[TestFixture]
 	public class TeamsControllerTests
-		{
-		private TeamsController _teamsController;
-		private ApplicationDbContext _context;
-		private SqliteConnection sqliteConnection;
+	{
+		private TeamsController? _teamsController;
+		private AccountController? _accountController;
+		private ApplicationDbContext? _context;
+		private UserManager<AppUser>? _userManager;
+		private SignInManager<AppUser>? _signInManager;
+		private SqliteConnection? sqliteConnection;
 
 		[SetUp]
-		public void SetUp ()
-			{
+		public void SetUp()
+		{
 			// Build service colection to create identity UserManager and RoleManager.           
 			IServiceCollection serviceCollection = new ServiceCollection();
 
@@ -44,75 +53,275 @@ namespace KudosDash.Tests.Unit
 				.SetBasePath(Directory.GetCurrentDirectory())
 				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
+			// Setup mock user manager and sign in manager
+			var store = new UserStore<AppUser>(_context);
+			_userManager = TestUserManager<AppUser>(store);
+			_signInManager = A.Fake<SignInManager<AppUser>>();
+
+
 			IConfigurationRoot configuration = builder.Build();
-			}
+		}
+
+
+		public static UserManager<TUser> TestUserManager<TUser>(IUserStore<TUser>? store = null) where TUser : class
+			// Mock user manager as done in official Identity Repo: https://github.com/dotnet/aspnetcore/blob/main/src/Identity/test/Shared/MockHelpers.cs#L33
+		{
+			store ??= new Mock<IUserStore<TUser>>().Object;
+			var options = new Mock<IOptions<IdentityOptions>>();
+			var idOptions = new IdentityOptions();
+			idOptions.Lockout.AllowedForNewUsers = false;
+			options.Setup(o => o.Value).Returns(idOptions);
+			var userValidators = new List<IUserValidator<TUser>>();
+			var validator = new Mock<IUserValidator<TUser>>();
+			userValidators.Add(validator.Object);
+			var pwdValidators = new List<PasswordValidator<TUser>>
+				{
+				new()
+				};
+			var userManager = new UserManager<TUser>(store, options.Object, new PasswordHasher<TUser>(),
+				userValidators, pwdValidators, new UpperInvariantLookupNormalizer(),
+				new IdentityErrorDescriber(), null,
+				new Mock<ILogger<UserManager<TUser>>>().Object);
+			validator.Setup(v => v.ValidateAsync(userManager, It.IsAny<TUser>()))
+				.Returns(Task.FromResult(IdentityResult.Success)).Verifiable();
+			return userManager;
+		}
 
 		[TearDown]
-		public void TearDown ()
-			{
+		public void TearDown()
+		{
 			_context.Database.EnsureDeleted();
 			_context.Dispose();
 			sqliteConnection.Close();
-			}
+		}
 
 		[Test]
-		public void TeamsController_Create_ReturnsSuccessful ()
-			{
+		public void TeamsController_Create_ReturnsSuccessful()
+		{
 			// Arrange
-			_teamsController = new TeamsController(_context);
+			_teamsController = new TeamsController(_context, _userManager);
 
 			// Act
 			var result = _teamsController.Create();
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-			}
+		}
 
 		[Test]
-		public void TeamsController_Create_NewTeam_ReturnsSuccessful ()
-			{
+		public void TeamsController_Create_NewTeam_ReturnsSuccessful()
+		{
 			// Arrange
-			_teamsController = new TeamsController(_context);
+			_teamsController = new TeamsController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
 			var team = new Teams()
-				{
+			{
 				TeamId = 1,
 				TeamName = "Test"
-				};
+			};
 
 			// Act
 			var result = _teamsController.Create(team);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+			_context.Teams.Count().Should().Be(1);
+		}
 
 		[Test]
-		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure ()
+		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure()
+		{
+			// Arrange
+			_teamsController = new TeamsController(_context, _userManager);
+			var controllerContext = new ControllerContext()
 			{
-			_teamsController = new TeamsController(_context);
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
 			var team = new Teams()
-				{
+			{
 				TeamId = 1,
-				};
+			};
 
 			// Act
 			var result = _teamsController.Create(team);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
-			}
+		}
 
 		[Test]
-		public void TeamsController_Index_ReturnsSuccess ()
-			{
+		public void TeamsController_Create_ManagerRole_ReturnsSuccess()
+		{
 			// Arrange
-			_teamsController = new TeamsController(_context);
+			_teamsController = new TeamsController(_context, _userManager);
+			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			// Create a user
+			var testUser = new AppUser
+			{
+				FirstName = "Test",
+				LastName = "Test",
+				Email = "test@test.com",
+				UserName = "test@test.com"
+			};
+			_userManager.CreateAsync(testUser, "Test-1234");
+
+			var loginUser = new LoginVM()
+			{
+				Email = testUser.Email,
+				Password = "Test-1234",
+				RememberMe = false
+			};
+
+			_ = _accountController.Login(loginUser);
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			// Act
+			var result = _teamsController.Create(team);
+
+			// Assert
+			_context.Teams.Count().Should().Be(1);
+		}
+
+		[Test]
+		public void TeamsController_Index_ReturnsSuccess()
+		{
+			// Arrange
+			_teamsController = new TeamsController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
 
 			// Act
 			var result = _teamsController.Index();
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
+
+		[Test]
+		public void TeamsController_Details_ReturnsSuccess()
+		{
+			_teamsController = new TeamsController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			// Act
+			var create = _teamsController.Create(team);
+
+			// Act
+			var result = _teamsController.Details(1);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+		}
+
+
+		[Test]
+		public void TeamsController_Edit_ReturnsSuccess()
+		{
+			_teamsController = new TeamsController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			// Act
+			var create = _teamsController.Create(team);
+
+			// Act
+			var result = _teamsController.Edit(1);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+		}
+
+		[Test]
+		public void TeamsController_Delete_ReturnsSuccess()
+		{
+			_teamsController = new TeamsController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			// Act
+			var create = _teamsController.Create(team);
+
+			// Act
+			var result = _teamsController.Delete(1);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+		}
+
+		[Test]
+		public void TeamsController_DeleteConfirmed_ReturnsSuccess()
+		{
+			_teamsController = new TeamsController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			// Act
+			var create = _teamsController.Create(team);
+
+			// Act
+			var result = _teamsController.DeleteConfirmed(1);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			_context.Teams.Count().Should().Be(0);
 		}
 	}
+}
