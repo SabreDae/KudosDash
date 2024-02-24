@@ -5,26 +5,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KudosDash.Migrations
 {
-    /// <inheritdoc />
-    public partial class AddTimeStampToUserAccDatabase : Migration
-    {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreationTimestamp",
-                table: "AspNetUsers",
-                type: "TEXT",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-        }
+	/// <inheritdoc />
+	public partial class AddTimeStampToUserAccDatabase : Migration
+	{
+		/// <inheritdoc />
+		protected override void Up(MigrationBuilder migrationBuilder)
+		{
+			migrationBuilder.AddColumn<DateTime>(
+				name: "CreationTimestamp",
+				table: "AspNetUsers",
+				type: "TEXT",
+				nullable: false,
+				defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+		}
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "CreationTimestamp",
-                table: "AspNetUsers");
-        }
-    }
+		/// <inheritdoc />
+		protected override void Down(MigrationBuilder migrationBuilder)
+		{
+			migrationBuilder.DropColumn(
+				name: "CreationTimestamp",
+				table: "AspNetUsers");
+		}
+	}
 }

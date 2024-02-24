@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KudosDash.Models
-	{
+{
 	public class Feedback
-		{
+	{
 		[Key]
 		public int ID { get; set; }
 
@@ -29,5 +29,8 @@ namespace KudosDash.Models
 		[DataType(DataType.MultilineText)]
 		[StringLength(500, ErrorMessage = "Please do not enter more than 500 characters!")]
 		public string? FeedbackText { get; set; }
-		}
+
+		[Required]
+		public bool ManagerApproved { get; set; } = false;
 	}
+}
