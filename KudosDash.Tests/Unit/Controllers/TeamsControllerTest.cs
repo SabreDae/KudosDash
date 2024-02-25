@@ -18,10 +18,10 @@ using Moq;
 using NUnit.Framework;
 
 namespace KudosDash.Tests.Unit
-{
+	{
 	[TestFixture]
 	public class TeamsControllerTests
-	{
+		{
 		private TeamsController? _teamsController;
 		private AccountController? _accountController;
 		private ApplicationDbContext? _context;
@@ -30,8 +30,8 @@ namespace KudosDash.Tests.Unit
 		private SqliteConnection? sqliteConnection;
 
 		[SetUp]
-		public void SetUp()
-		{
+		public void SetUp ()
+			{
 			// Build service colection to create identity UserManager and RoleManager.           
 			IServiceCollection serviceCollection = new ServiceCollection();
 
@@ -60,12 +60,12 @@ namespace KudosDash.Tests.Unit
 
 
 			IConfigurationRoot configuration = builder.Build();
-		}
+			}
 
 
-		public static UserManager<TUser> TestUserManager<TUser>(IUserStore<TUser>? store = null) where TUser : class
+		public static UserManager<TUser> TestUserManager<TUser> (IUserStore<TUser>? store = null) where TUser : class
 			// Mock user manager as done in official Identity Repo: https://github.com/dotnet/aspnetcore/blob/main/src/Identity/test/Shared/MockHelpers.cs#L33
-		{
+			{
 			store ??= new Mock<IUserStore<TUser>>().Object;
 			var options = new Mock<IOptions<IdentityOptions>>();
 			var idOptions = new IdentityOptions();
@@ -85,19 +85,19 @@ namespace KudosDash.Tests.Unit
 			validator.Setup(v => v.ValidateAsync(userManager, It.IsAny<TUser>()))
 				.Returns(Task.FromResult(IdentityResult.Success)).Verifiable();
 			return userManager;
-		}
+			}
 
 		[TearDown]
-		public void TearDown()
-		{
+		public void TearDown ()
+			{
 			_context.Database.EnsureDeleted();
 			_context.Dispose();
 			sqliteConnection.Close();
-		}
+			}
 
 		[Test]
-		public void TeamsController_Create_ReturnsSuccessful()
-		{
+		public void TeamsController_Create_ReturnsSuccessful ()
+			{
 			// Arrange
 			_teamsController = new TeamsController(_context, _userManager);
 
@@ -106,24 +106,24 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-		}
+			}
 
 		[Test]
-		public void TeamsController_Create_NewTeam_ReturnsSuccessful()
-		{
+		public void TeamsController_Create_NewTeam_ReturnsSuccessful ()
+			{
 			// Arrange
 			_teamsController = new TeamsController(_context, _userManager);
 			var controllerContext = new ControllerContext()
-			{
+				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-			};
+				};
 			_teamsController.ControllerContext = controllerContext;
 
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
 				TeamName = "Test"
-			};
+				};
 
 			// Act
 			var result = _teamsController.Create(team);
@@ -131,84 +131,84 @@ namespace KudosDash.Tests.Unit
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			_context.Teams.Count().Should().Be(1);
-		}
+			}
 
 		[Test]
-		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure()
-		{
+		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure ()
+			{
 			// Arrange
 			_teamsController = new TeamsController(_context, _userManager);
 			var controllerContext = new ControllerContext()
-			{
+				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-			};
+				};
 			_teamsController.ControllerContext = controllerContext;
 
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
-			};
+				};
 
 			// Act
 			var result = _teamsController.Create(team);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
-		}
+			}
 
 		[Test]
-		public void TeamsController_Create_ManagerRole_ReturnsSuccess()
-		{
+		public void TeamsController_Create_ManagerRole_ReturnsSuccess ()
+			{
 			// Arrange
 			_teamsController = new TeamsController(_context, _userManager);
 			_accountController = new AccountController(_signInManager, _userManager, _context);
 			var controllerContext = new ControllerContext()
-			{
+				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
-			};
+				};
 			_teamsController.ControllerContext = controllerContext;
 
 			// Create a user
 			var testUser = new AppUser
-			{
+				{
 				FirstName = "Test",
 				LastName = "Test",
 				Email = "test@test.com",
 				UserName = "test@test.com"
-			};
+				};
 			_userManager.CreateAsync(testUser, "Test-1234");
 
 			var loginUser = new LoginVM()
-			{
+				{
 				Email = testUser.Email,
 				Password = "Test-1234",
 				RememberMe = false
-			};
+				};
 
 			_ = _accountController.Login(loginUser);
 
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
 				TeamName = "Test"
-			};
+				};
 
 			// Act
 			var result = _teamsController.Create(team);
 
 			// Assert
 			_context.Teams.Count().Should().Be(1);
-		}
+			}
 
 		[Test]
-		public void TeamsController_Index_ReturnsSuccess()
-		{
+		public void TeamsController_Index_ReturnsSuccess ()
+			{
 			// Arrange
 			_teamsController = new TeamsController(_context, _userManager);
 			var controllerContext = new ControllerContext()
-			{
+				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-			};
+				};
 			_teamsController.ControllerContext = controllerContext;
 
 			// Act
@@ -216,25 +216,24 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-		}
+			}
 
 		[Test]
-		public void TeamsController_Details_ReturnsSuccess()
-		{
+		public void TeamsController_Details_ReturnsSuccess ()
+			{
 			_teamsController = new TeamsController(_context, _userManager);
 			var controllerContext = new ControllerContext()
-			{
+				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-			};
+				};
 			_teamsController.ControllerContext = controllerContext;
 
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
 				TeamName = "Test"
-			};
+				};
 
-			// Act
 			var create = _teamsController.Create(team);
 
 			// Act
@@ -242,26 +241,25 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-		}
+			}
 
 
 		[Test]
-		public void TeamsController_Edit_ReturnsSuccess()
-		{
+		public void TeamsController_Edit_ReturnsSuccess ()
+			{
 			_teamsController = new TeamsController(_context, _userManager);
 			var controllerContext = new ControllerContext()
-			{
+				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-			};
+				};
 			_teamsController.ControllerContext = controllerContext;
 
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
 				TeamName = "Test"
-			};
+				};
 
-			// Act
 			var create = _teamsController.Create(team);
 
 			// Act
@@ -269,25 +267,24 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-		}
+			}
 
 		[Test]
-		public void TeamsController_Delete_ReturnsSuccess()
-		{
+		public void TeamsController_Delete_ReturnsSuccess ()
+			{
 			_teamsController = new TeamsController(_context, _userManager);
 			var controllerContext = new ControllerContext()
-			{
+				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-			};
+				};
 			_teamsController.ControllerContext = controllerContext;
 
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
 				TeamName = "Test"
-			};
+				};
 
-			// Act
 			var create = _teamsController.Create(team);
 
 			// Act
@@ -295,25 +292,24 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-		}
+			}
 
 		[Test]
-		public void TeamsController_DeleteConfirmed_ReturnsSuccess()
-		{
+		public void TeamsController_DeleteConfirmed_ReturnsSuccess ()
+			{
 			_teamsController = new TeamsController(_context, _userManager);
 			var controllerContext = new ControllerContext()
-			{
+				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-			};
+				};
 			_teamsController.ControllerContext = controllerContext;
 
 			var team = new Teams()
-			{
+				{
 				TeamId = 1,
 				TeamName = "Test"
-			};
+				};
 
-			// Act
 			var create = _teamsController.Create(team);
 
 			// Act
@@ -322,6 +318,6 @@ namespace KudosDash.Tests.Unit
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			_context.Teams.Count().Should().Be(0);
+			}
 		}
 	}
-}

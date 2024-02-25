@@ -1,11 +1,12 @@
 ﻿using KudosDash.Models.Users;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KudosDash.Models
-{
-	public class Feedback
 	{
+	public class Feedback
+		{
 		[Key]
 		public int ID { get; set; }
 
@@ -15,6 +16,7 @@ namespace KudosDash.Models
 
 		[Required]
 		[ForeignKey("AppUser")]
+		[DisplayName("User")]
 		public string? TargetUser { get; set; }
 
 		public virtual AppUser? User { get; set; }
@@ -31,6 +33,7 @@ namespace KudosDash.Models
 		public string? FeedbackText { get; set; }
 
 		[Required]
+		[DisplayName("Manager Approved?")]
 		public bool ManagerApproved { get; set; } = false;
+		}
 	}
-}

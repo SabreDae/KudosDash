@@ -1,0 +1,104 @@
+﻿@model KudosDash.Models.AdminVM;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Admin Dashboard</h1>
+<div>
+    <h3 class="text-uppercase p-2 text-center">User Records</h3>
+    <table class="table table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().Id)</th>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().FirstName)</th>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().LastName)</th>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().Email)</th>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().EmailConfirmed)</th>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().UserName)</th>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().TeamId)</th>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().CreationTimestamp)</th>
+                <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().AccessFailedCount)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+                {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                    <td>@user.EmailConfirmed</td>
+                    <td>@user.UserName</td>
+                    <td>@user.TeamId</td>
+                <td>@user.CreationTimestamp</td>
+                    <td>@user.AccessFailedCount</td>
+                    <td>
+                    <a class="btn btn-sm btn-secondary">Edit</a>
+                    <a class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                }
+        </tbody>
+    </table>
+    <h3 class="text-uppercase p-2 text-center">Teams Records</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => Model.Teams.FirstOrDefault().TeamId)</th>
+                <th>@Html.DisplayNameFor(m => Model.Teams.FirstOrDefault().TeamName)</th>
+                <th>Number of Members</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var team in Model.Teams)
+                {
+                <tr>
+                    <td>@team.TeamId</td>
+                    <td>@team.TeamName</td>
+                    <td>
+                        @Model.Users.Where(u => u.TeamId == team.TeamId).Count()
+                    </td>
+                    <td>
+                        <a type="submit" asp-controller="Teams" asp-action="Edit" asp-route-id="@team.TeamId" class="btn btn-sm btn-secondary">Edit</a>
+                        <a type="submit" asp-controller="Teams" asp-action="Delete" asp-route-id="@team.TeamId" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                }
+        </tbody>
+    </table>
+    <h3 class="text-uppercase p-2 text-center">Feedback Records</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().ID)</th>
+                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().Author)</th>
+                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().TargetUser)</th>
+                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().FeedbackDate)</th>
+                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().FeedbackText)</th>
+                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().ManagerApproved)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var feedback in Model.FeedbackCol)
+                {
+                <tr>
+                    <td>@feedback.ID</td>
+                    <td>@feedback.Author</td>
+                    <td>@feedback.TargetUser</td>
+                    <td>@feedback.FeedbackDate</td>
+                    <td>@feedback.FeedbackText</td>
+                    <td>@feedback.ManagerApproved</td>
+                    <td>
+                        <a type="submit" asp-controller="Feedback" asp-action="Edit" asp-route-id="@feedback.ID" class="btn btn-sm btn-secondary">Edit</a>
+                        <a type="submit" asp-controller="Feedback" asp-action="Delete" asp-route-id="@feedback.ID" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                }
+        </tbody>
+    </table>
+</div>  

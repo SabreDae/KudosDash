@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KudosDash.Models.Users
-{
-	public class AppUser : IdentityUser
 	{
+	public class AppUser : IdentityUser
+		{
 
 		[Required]
 		[PersonalData]
@@ -18,11 +19,13 @@ namespace KudosDash.Models.Users
 		public string? LastName { get; set; }
 
 		[DataType(DataType.DateTime)]
+		[DisplayName("Creation Timestamp")]
 		public DateTime CreationTimestamp { get; set; } = DateTime.UtcNow;
 
 		[PersonalData]
 		[ForeignKey("Teams")]
+		[DisplayName("Team ID")]
 		public int? TeamId { get; set; }
 		public virtual Teams? Team { get; set; } = null;
+		}
 	}
-}

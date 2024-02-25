@@ -5,16 +5,16 @@ using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 
 namespace KudosDash.Tests.Unit
-	{
+{
 	[TestFixture]
 	public class HomeControllerTests
-		{
-		private ILogger<HomeController> _logger;
-		private HomeController _homeController;
+	{
+		private ILogger<HomeController>? _logger;
+		private HomeController? _homeController;
 
 		[Test]
-		public void HomeController_View_ReturnsSuccess ()
-			{
+		public void HomeController_View_ReturnsSuccess()
+		{
 			// Arrange
 			_homeController = new HomeController(_logger);
 
@@ -23,6 +23,6 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-			}
 		}
 	}
+}
