@@ -1,4 +1,5 @@
 ﻿using KudosDash.Models.Users;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,12 +10,12 @@ namespace KudosDash.Models
 		[Key]
 		public int ID { get; set; }
 
-		[Required]
 		[ForeignKey("AppUser")]
 		public string? Author { get; set; }
 
 		[Required]
 		[ForeignKey("AppUser")]
+		[DisplayName("User")]
 		public string? TargetUser { get; set; }
 
 		public virtual AppUser? User { get; set; }
@@ -29,5 +30,9 @@ namespace KudosDash.Models
 		[DataType(DataType.MultilineText)]
 		[StringLength(500, ErrorMessage = "Please do not enter more than 500 characters!")]
 		public string? FeedbackText { get; set; }
+
+		[Required]
+		[DisplayName("Manager Approved?")]
+		public bool ManagerApproved { get; set; } = false;
 		}
 	}

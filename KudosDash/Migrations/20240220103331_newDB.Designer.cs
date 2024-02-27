@@ -3,6 +3,7 @@ using System;
 using KudosDash.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KudosDash.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240220103331_newDB")]
+    partial class newDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
@@ -24,6 +27,7 @@ namespace KudosDash.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Author")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("FeedbackDate")
@@ -33,9 +37,6 @@ namespace KudosDash.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("ManagerApproved")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TargetUser")
                         .IsRequired()
@@ -59,49 +60,11 @@ namespace KudosDash.Migrations
 
                     b.Property<string>("TeamName")
                         .IsRequired()
-                        .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.HasKey("TeamId");
 
                     b.ToTable("Teams");
-                });
-
-            modelBuilder.Entity("KudosDash.Models.Users.AccountVM", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ConfirmNewPassword")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NewPassword")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("OldPassword")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("TeamName")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AccountVM");
                 });
 
             modelBuilder.Entity("KudosDash.Models.Users.AppUser", b =>
@@ -114,9 +77,6 @@ namespace KudosDash.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreationTimestamp")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
