@@ -11,7 +11,6 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["KudosDash/KudosDash.csproj", "KudosDash/"]
 RUN dotnet restore "./KudosDash/./KudosDash.csproj"
-RUN dotnet ef database update
 COPY . .
 WORKDIR "/src/KudosDash"
 RUN dotnet build "./KudosDash.csproj" -c $BUILD_CONFIGURATION -o /app/build
