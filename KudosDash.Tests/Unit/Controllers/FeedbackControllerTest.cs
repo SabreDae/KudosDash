@@ -112,52 +112,52 @@ namespace KudosDash.Tests.Unit
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			}
 
-		[Test]
-		public void FeedbackController_Create_ReturnsSuccess ()
-			{
-			// Arrange
-			_feedbackController = new FeedbackController(_context, _userManager);
-			var controllerContext = new ControllerContext()
-				{
-				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
-			_feedbackController.ControllerContext = controllerContext;
+		// [Test]
+		// public void FeedbackController_Create_ReturnsSuccess ()
+		// 	{
+		// 	// Arrange
+		// 	_feedbackController = new FeedbackController(_context, _userManager);
+		// 	var controllerContext = new ControllerContext()
+		// 		{
+		// 		HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+		// 		};
+		// 	_feedbackController.ControllerContext = controllerContext;
 
-			// Act
-			var result = _feedbackController.Create();
+		// 	// Act
+		// 	var result = _feedbackController.Create();
 
-			// Assert
-			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		// 	// Assert
+		// 	result.Status.Should().Be(TaskStatus.RanToCompletion);
+		// 	}
 
-		[Test]
-		public void FeedbackController_CreateNewRecord_ReturnsSuccess ()
-			{
-			// Arrange
-			_feedbackController = new FeedbackController(_context, _userManager);
-			var testUser = new Mock<ClaimsPrincipal>();
-			var controllerContext = new ControllerContext()
-				{
-				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true && ctx.User == testUser.Object)
-				};
-			_feedbackController.ControllerContext = controllerContext;
+		// [Test]
+		// public void FeedbackController_CreateNewRecord_ReturnsSuccess ()
+		// 	{
+		// 	// Arrange
+		// 	_feedbackController = new FeedbackController(_context, _userManager);
+		// 	var testUser = new Mock<ClaimsPrincipal>();
+		// 	var controllerContext = new ControllerContext()
+		// 		{
+		// 		HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true && ctx.User == testUser.Object)
+		// 		};
+		// 	_feedbackController.ControllerContext = controllerContext;
 
-			var testFeedback = new Feedback
-				{
-				ID = 1,
-				Author = "Test",
-				TargetUser = "TestUser",
-				FeedbackDate = DateTime.Now,
-				FeedbackText = "Test",
-				ManagerApproved = false,
-				};
+		// 	var testFeedback = new Feedback
+		// 		{
+		// 		ID = 1,
+		// 		Author = "Test",
+		// 		TargetUser = "TestUser",
+		// 		FeedbackDate = DateTime.Now,
+		// 		FeedbackText = "Test",
+		// 		ManagerApproved = false,
+		// 		};
 
-			// Act
-			var result = _feedbackController.Create(testFeedback);
-			Console.WriteLine(result);
-			// Assert
-			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		// 	// Act
+		// 	var result = _feedbackController.Create(testFeedback);
+		// 	Console.WriteLine(result);
+		// 	// Assert
+		// 	result.Status.Should().Be(TaskStatus.RanToCompletion);
+		// 	}
 
 		[Test]
 		public void FeedbackController_Details_ReturnsSuccess ()

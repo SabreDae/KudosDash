@@ -125,6 +125,7 @@ namespace KudosDash.Controllers
 				}
 			if (ModelState.IsValid)
 				{
+				feedback.Author = currentUser.Id;
 				context.Add(feedback);
 				await context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));

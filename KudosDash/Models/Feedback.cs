@@ -10,7 +10,6 @@ namespace KudosDash.Models
 		[Key]
 		public int ID { get; set; }
 
-		[Required]
 		[ForeignKey("AppUser")]
 		public string? Author { get; set; }
 
