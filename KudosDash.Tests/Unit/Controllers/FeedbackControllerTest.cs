@@ -112,16 +112,16 @@ namespace KudosDash.Tests.Unit
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			}
 
-		// [Test]
-		// public void FeedbackController_Create_ReturnsSuccess ()
-		// 	{
-		// 	// Arrange
-		// 	_feedbackController = new FeedbackController(_context, _userManager);
-		// 	var controllerContext = new ControllerContext()
-		// 		{
-		// 		HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-		// 		};
-		// 	_feedbackController.ControllerContext = controllerContext;
+		[Test]
+		public void FeedbackController_Create_ReturnsSuccess ()
+			{
+			// Arrange
+			_feedbackController = new FeedbackController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+				{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+				};
+			_feedbackController.ControllerContext = controllerContext;
 
 		// 	// Act
 		// 	var result = _feedbackController.Create();
