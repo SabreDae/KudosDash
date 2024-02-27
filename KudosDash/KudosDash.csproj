@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Assignment-25418c92-cfd7-426a-b8d1-c4295069378b</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -31,6 +32,12 @@
 
 	<ItemGroup>
 	  <Folder Include="Data\Migrations\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="database.db">
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
 	</ItemGroup>
 
 </Project>

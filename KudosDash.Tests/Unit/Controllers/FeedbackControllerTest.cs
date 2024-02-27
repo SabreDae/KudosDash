@@ -2,7 +2,6 @@
 using FluentAssertions;
 using KudosDash.Controllers;
 using KudosDash.Data;
-using KudosDash.Models;
 using KudosDash.Models.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +15,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using System.Security.Claims;
 
 namespace KudosDash.Tests.Unit
 	{
@@ -112,16 +110,16 @@ namespace KudosDash.Tests.Unit
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			}
 
-		// [Test]
-		// public void FeedbackController_Create_ReturnsSuccess ()
-		// 	{
-		// 	// Arrange
-		// 	_feedbackController = new FeedbackController(_context, _userManager);
-		// 	var controllerContext = new ControllerContext()
-		// 		{
-		// 		HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-		// 		};
-		// 	_feedbackController.ControllerContext = controllerContext;
+		//[Test]
+		//public void FeedbackController_Create_ReturnsSuccess ()
+		//	{
+		//	// Arrange
+		//	_feedbackController = new FeedbackController(_context, _userManager);
+		//	var controllerContext = new ControllerContext()
+		//		{
+		//		HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+		//		};
+		//	_feedbackController.ControllerContext = controllerContext;
 
 		// 	// Act
 		// 	var result = _feedbackController.Create();
