@@ -88,4 +88,3 @@ namespace KudosDash
 			app.Run();
 			}
 		}
-	}
