@@ -18,7 +18,7 @@ namespace KudosDash
 			// Add services to the container.
 			var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 			builder.Services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlite(connectionString));
+				options.UseSqlite(@"Datasource=../database.db"));
 			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 			builder.Services.AddIdentity<AppUser, IdentityRole>(
