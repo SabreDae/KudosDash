@@ -11,6 +11,7 @@ namespace KudosDash.Controllers
 	[Authorize(Roles = "Admin,Manager")]
 	public class TeamsController (ApplicationDbContext context, UserManager<AppUser> userManager) : Controller
 		{
+		private readonly ILogger _logger;
 
 		// GET: Teams
 		// Only admins will have access to viewing and editing all teams, managers will be able to access information for their own team only
@@ -181,6 +182,7 @@ namespace KudosDash.Controllers
 
 			// Ensure references to the deleted team are removed from other tables
 			await context.SaveChangesAsync();
+			TempData["AlertMessage"] = "Team has successfully been deleted!";
 			if (User.IsInRole("Manager"))
 				{
 				// Manager will be redirected to home page on successful delete as they have no access to the Teams Index

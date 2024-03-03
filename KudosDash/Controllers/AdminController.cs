@@ -9,6 +9,7 @@ namespace KudosDash.Controllers
 	public class AdminController (ApplicationDbContext context) : Controller
 		{
 		private readonly ApplicationDbContext _context = context;
+		private readonly ILogger _logger;
 
 		// GET: Admin
 		public IActionResult Index ()

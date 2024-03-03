@@ -40,25 +40,27 @@
             @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
                 {
                 <td>
-                    @Html.DisplayFor(modelItem => item.Author)
+                    @item.Author
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TargetUser)
+                    @* @item.Users.Where(u => u.Id == item.TargetUser).First().FirstName *@
                 </td>
                 } 
             <td>
-                @Html.DisplayFor(modelItem => item.FeedbackDate)
+                @item.FeedbackDate
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FeedbackText)
+                @item.FeedbackText
             </td>
             @if (User.IsInRole("Manager")) 
             {
             <td>
-                <a class="btn btn-success" asp-action="ManagerApproved" asp-route-id="@item.ID">Approve</a>
-                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
+                <form method="post">
+                    <a class="btn btn-success" asp-action="ManagerApprove" asp-route-id="@item.Id">Approve</a>
+                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </form>
+             </td>
             }
         </tr>
 }

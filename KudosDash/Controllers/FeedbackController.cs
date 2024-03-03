@@ -13,6 +13,7 @@ namespace KudosDash.Controllers
 	[Authorize]
 	public class FeedbackController (ApplicationDbContext context, UserManager<AppUser> userManager) : Controller
 		{
+		private readonly ILogger _logger;
 
 		[HttpGet]
 		// GET: Feedback Index page view
@@ -62,7 +63,7 @@ namespace KudosDash.Controllers
 				}
 
 			var feedback = await context.Feedback
-				.FirstOrDefaultAsync(m => m.ID == id);
+				.FirstOrDefaultAsync(m => m.Id == id);
 			if (feedback == null)
 				{
 				return NotFound();
@@ -81,7 +82,13 @@ namespace KudosDash.Controllers
 			if (!User.IsInRole("Admin"))
 				{
 				// Non-admin users should only be able to create feedback for users in the same team as themselves
-				users = context.Account.Where(u => u.TeamId == currentUser.TeamId).ToListAsync();
+				users = context.Account.Where(u => u.TeamId == currentUser.TeamId && u.TeamId != null).ToListAsync();
+				if (users.Result.Count == 0)
+					{
+					// In some instances there will be no-one to submit feedback for so return error
+					TempData["AlertMessage"] = "Please join a team before trying to submit feedback for colleagues!";
+					return RedirectToAction("Details", "Account");
+					}
 				}
 			else
 				{
@@ -100,6 +107,7 @@ namespace KudosDash.Controllers
 			// Set date by default to current date
 			Feedback model = new()
 				{
+				Users = context.Users.ToList(),
 				FeedbackDate = DateTime.Now,
 				};
 			return View(model);
@@ -117,11 +125,6 @@ namespace KudosDash.Controllers
 				{
 				// Non-admin users should only be able to create feedback for users in the same team as themselves
 				var users = context.Account.Where(u => u.TeamId == currentUser.TeamId).ToListAsync();
-				if (users.Result.Count == 0)
-					{
-					// In some instances there will be no-one to submit feedback for so return error
-					return View("Error");
-					}
 				List<SelectListItem> selectListItems = [];
 				foreach (var user in await users)
 					{
@@ -167,7 +170,7 @@ namespace KudosDash.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit (int id, [Bind("ID,Author,TargetUser,FeedbackDate,FeedbackText")] Feedback feedback)
 			{
-			if (id != feedback.ID)
+			if (id != feedback.Id)
 				{
 				return NotFound();
 				}
@@ -181,7 +184,7 @@ namespace KudosDash.Controllers
 					}
 				catch (DbUpdateConcurrencyException)
 					{
-					if (!FeedbackExists(feedback.ID))
+					if (!FeedbackExists(feedback.Id))
 						{
 						return NotFound();
 						}
@@ -205,7 +208,7 @@ namespace KudosDash.Controllers
 				}
 
 			var feedback = await context.Feedback
-				.FirstOrDefaultAsync(m => m.ID == id);
+				.FirstOrDefaultAsync(m => m.Id == id);
 			if (feedback == null)
 				{
 				return NotFound();
@@ -227,10 +230,23 @@ namespace KudosDash.Controllers
 				}
 
 			await context.SaveChangesAsync();
+			TempData["AlertMessage"] = "Feedback deleted successfully.";
 			return RedirectToAction(nameof(Index));
 			}
 
-		[HttpPost]
+		[HttpGet]
+		[Authorize(Roles = "Manager")]
+		public async Task<IActionResult> ManagerApprove (int id)
+			{
+			var feedback = await context.Feedback.FindAsync(id);
+			if (feedback == null)
+				{
+				return NotFound();
+				}
+			return View(feedback);
+			}
+
+		[HttpPost, ActionName("ManagerApprove")]
 		[Authorize(Roles = "Manager")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> ManagerApproved (int id)
@@ -243,12 +259,13 @@ namespace KudosDash.Controllers
 				}
 
 			await context.SaveChangesAsync();
+			TempData["AlertMessage"] = "Feedback approved for user viewing.";
 			return RedirectToAction(nameof(Index));
 			}
 
 		private bool FeedbackExists (int id)
 			{
-			return context.Feedback.Any(e => e.ID == id);
+			return context.Feedback.Any(e => e.Id == id);
 			}
 		}
 	}

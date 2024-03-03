@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -192,6 +193,7 @@ namespace KudosDash.Tests.Unit
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
 				};
 			_feedbackController.ControllerContext = controllerContext;
+			_feedbackController.TempData = A.Fake<TempDataDictionary>();
 
 			// Act
 			var result = _feedbackController.ManagerApproved(1);
