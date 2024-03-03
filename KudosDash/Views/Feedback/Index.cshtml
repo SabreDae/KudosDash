@@ -6,47 +6,60 @@
 
 <h1>Dashboard</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (!User.IsInRole("Admin"))
+    {
+    <h3>Feedback from your team!</h3>
+    }
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TargetUser)
-            </th>
+            @if(User.IsInRole("Manager") || User.IsInRole("Admin"))
+                {
+                <th>
+                    @Html.DisplayNameFor(model => model.Author)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TargetUser)
+                </th>
+                }
             <th>
                 @Html.DisplayNameFor(model => model.FeedbackDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FeedbackText)
             </th>
-            <th></th>
+            @if (User.IsInRole("Manager"))
+                {
+                <th></th>
+                }
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TargetUser)
-            </td>
+            @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+                {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TargetUser)
+                </td>
+                } 
             <td>
                 @Html.DisplayFor(modelItem => item.FeedbackDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FeedbackText)
             </td>
+            @if (User.IsInRole("Manager")) 
+            {
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a class="btn btn-success" asp-action="ManagerApproved" asp-route-id="@item.ID">Approve</a>
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.ID">Delete</a>
             </td>
+            }
         </tr>
 }
     </tbody>
