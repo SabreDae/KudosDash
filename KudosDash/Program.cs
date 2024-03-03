@@ -60,6 +60,10 @@ namespace KudosDash
 				app.UseHsts();
 				}
 
+			/* HttpsRedirection is not configured here, as the hosting solution automatically redirects from HTTP to HTTPS. 
+			Setting up redirection here also causes an infinite redirect loop for the deployed application.
+			*/
+
 			app.UseStaticFiles();
 
 			app.UseRouting();
@@ -88,4 +92,4 @@ namespace KudosDash
 			app.Run();
 			}
 		}
-}
+	}

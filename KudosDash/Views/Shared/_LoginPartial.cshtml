@@ -6,11 +6,35 @@
 <ul class="navbar-nav">
 @if (signInManager.IsSignedIn(User))
 {
+    <a class="nav-link nav-item" asp-controller="Feedback" asp-action="Create">Submit Feedback</a>
+    @if (!User.IsInRole("Team Member"))
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="teamsdrop" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Teams</a>
+                <div class="dropdown-menu" aria-labelledby="teamsdrop">
+                    <a class="dropdown-item text-dark" asp-controller="Teams" asp-action="Create">Create Team</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="dropdown-item text-dark" asp-controller="Teams" asp-action="Index">Manage Teams</a>
+                    } 
+                    else 
+                    {
+                        @* TODO: implement ID in the below link *@
+                        <a class="dropdown-item text-dark" asp-controller="Teams" asp-action="Edit">Manage Team</a>
+                    }
+                </div>
+            </li>
+        }
     <li class="nav-item dropdown">
-        <a class="nav-link nav-item" asp-controller="Feedback" asp-action="Create">Submit Feedback</a>
         <a class="nav-link dropdown-toggle" id="navdrop" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@User.Identity?.Name!</a>
         <div class="dropdown-menu" aria-labelledby="navdrop">
-            <a class="dropdown-item text-dark" asp-controller="Feedback" asp-action="Index">Dashboard</a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="dropdown-item text-dark" asp-controller="Admin" asp-action="Index">Dashboard</a>    
+            }
+            else {
+                <a class="dropdown-item text-dark" asp-controller="Feedback" asp-action="Index">Dashboard</a>
+            } 
             <a class="dropdown-item text-dark" asp-action="Details" asp-controller="Account">Account</a>
             <a class="dropdown-item text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
         </div>

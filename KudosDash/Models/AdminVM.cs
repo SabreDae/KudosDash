@@ -4,8 +4,8 @@ namespace KudosDash.Models
 	{
 	public class AdminVM
 		{
-		public IEnumerable<AppUser> Users { get; set; }
-		public IEnumerable<Teams> Teams { get; set; }
-		public IEnumerable<Feedback> FeedbackCol { get; set; }
+		public required IEnumerable<AppUser> Users { get; set; }
+		public required IEnumerable<Teams> Teams { get; set; }
+		public required IEnumerable<Feedback> FeedbackCol { get; set; }
 		}
 	}
