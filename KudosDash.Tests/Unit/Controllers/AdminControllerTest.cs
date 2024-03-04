@@ -1,14 +1,17 @@
-﻿using FluentAssertions;
+﻿using FakeItEasy;
+using FluentAssertions;
 using KudosDash.Controllers;
 using KudosDash.Data;
 using KudosDash.Models.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -61,7 +64,9 @@ namespace KudosDash.Tests.Unit
 		public void AdminController_Index_ReturnsSuccess ()
 			{
 			// Arrange
-			_adminController = new AdminController(_context);
+			var mock = new Mock<ILogger<AdminController>>();
+			ILogger<AdminController> logger = mock.Object;
+			_adminController = new AdminController(_context, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -73,6 +78,47 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
+			}
+
+		[Test]
+		public void AdminController_Delete_ReturnsSuccess ()
+			{
+			// Arrange
+			var mock = new Mock<ILogger<AdminController>>();
+			ILogger<AdminController> logger = mock.Object;
+			_adminController = new AdminController(_context, logger);
+			var controllerContext = new ControllerContext()
+				{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+				};
+			_adminController.ControllerContext = controllerContext;
+
+			// Act
+			var result = _adminController.Delete("test");
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			}
+
+		[Test]
+		public void AdminController_DeleteConfirmed_ReturnsSuccess ()
+			{
+			// Arrange
+			var mock = new Mock<ILogger<AdminController>>();
+			ILogger<AdminController> logger = mock.Object;
+			_adminController = new AdminController(_context, logger);
+			var controllerContext = new ControllerContext()
+				{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+				};
+			_adminController.ControllerContext = controllerContext;
+			_adminController.TempData = A.Fake<TempDataDictionary>();
+
+			// Act
+			var result = _adminController.DeleteConfirmed("test");
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			}
 		}
 	}

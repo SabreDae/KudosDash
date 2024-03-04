@@ -36,8 +36,7 @@
                 <td>@user.CreationTimestamp</td>
                     <td>@user.AccessFailedCount</td>
                     <td>
-                    <a class="btn btn-sm btn-secondary">Edit</a>
-                    <a class="btn btn-sm btn-danger">Delete</a>
+                        <a asp-controller="Admin" asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
                 }
