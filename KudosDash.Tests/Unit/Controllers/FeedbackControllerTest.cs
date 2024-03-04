@@ -97,7 +97,9 @@ namespace KudosDash.Tests.Unit
 		public void FeedbackController_Index_ReturnsSuccess ()
 			{
 			// Arrange
-			_feedbackController = new FeedbackController(_context, _userManager);
+			var mock = new Mock<ILogger<FeedbackController>>();
+			ILogger<FeedbackController> logger = mock.Object;
+			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -115,7 +117,9 @@ namespace KudosDash.Tests.Unit
 		public void FeedbackController_Create_ReturnsSuccess ()
 			{
 			// Arrange
-			_feedbackController = new FeedbackController(_context, _userManager);
+			var mock = new Mock<ILogger<FeedbackController>>();
+			ILogger<FeedbackController> logger = mock.Object;
+			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -133,7 +137,9 @@ namespace KudosDash.Tests.Unit
 		public void FeedbackController_Details_ReturnsSuccess ()
 			{
 			// Arrange
-			_feedbackController = new FeedbackController(_context, _userManager);
+			var mock = new Mock<ILogger<FeedbackController>>();
+			ILogger<FeedbackController> logger = mock.Object;
+			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -151,7 +157,9 @@ namespace KudosDash.Tests.Unit
 		public void FeedbackController_Edit_ReturnsSuccess ()
 			{
 			// Arrange
-			_feedbackController = new FeedbackController(_context, _userManager);
+			var mock = new Mock<ILogger<FeedbackController>>();
+			ILogger<FeedbackController> logger = mock.Object;
+			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -169,7 +177,9 @@ namespace KudosDash.Tests.Unit
 		public void FeedbackController_Delete_ReturnsSuccess ()
 			{
 			// Arrange
-			_feedbackController = new FeedbackController(_context, _userManager);
+			var mock = new Mock<ILogger<FeedbackController>>();
+			ILogger<FeedbackController> logger = mock.Object;
+			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -184,10 +194,12 @@ namespace KudosDash.Tests.Unit
 			}
 
 		[Test]
-		public void FeedbackController_ManagerApproved_ReturnsSuccess ()
+		public void FeedbackController_ManagerApproved_NoFeedback_ReturnsSuccess ()
 			{
 			// Arrange
-			_feedbackController = new FeedbackController(_context, _userManager);
+			var mock = new Mock<ILogger<FeedbackController>>();
+			ILogger<FeedbackController> logger = mock.Object;
+			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
@@ -200,6 +212,7 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			_feedbackController.TempData["AlertMessage"].Should().Be("Feedback could not be approved. Please try again.");
 			}
 		}
 	}

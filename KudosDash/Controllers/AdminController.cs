@@ -22,8 +22,7 @@ namespace KudosDash.Controllers
 				Teams = _context.Teams.ToList(),
 				FeedbackCol = _context.Feedback.ToList(),
 				};
-
-			_logger.LogInformation("Admin Dashboard accessed at {DT}", DateTime.UtcNow.ToLongTimeString());
+			_logger.LogInformation("Admin Dashboard accessed at {DT}", DateTime.UtcNow);
 			return View(model);
 			}
 
@@ -58,7 +57,7 @@ namespace KudosDash.Controllers
 				_context.Users.Remove(account);
 				}
 			await _context.SaveChangesAsync();
-			_logger.LogInformation("Admininistrator deleted account {Acc} at {DT}", id, DateTime.UtcNow.ToLongTimeString());
+			_logger.LogInformation("Admininistrator deleted account {Acc} at {DT}", id, DateTime.UtcNow);
 			TempData["AlertMessage"] = "User account has successfully been deleted!";
 			return RedirectToAction("Index");
 			}

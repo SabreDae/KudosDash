@@ -11,9 +11,9 @@ namespace KudosDash.Controllers
 	{
 	// Ensure only logged in users are able to access Feedback views/model
 	[Authorize]
-	public class FeedbackController (ApplicationDbContext context, UserManager<AppUser> userManager) : Controller
+	public class FeedbackController (ApplicationDbContext context, UserManager<AppUser> userManager, ILogger<FeedbackController> logger) : Controller
 		{
-		private readonly ILogger _logger;
+		private readonly ILogger _logger = logger;
 
 		[HttpGet]
 		// GET: Feedback Index page view
@@ -44,6 +44,7 @@ namespace KudosDash.Controllers
 							{
 							memberIds.Add(member.Id);
 							}
+						// TODO: Manager sees user IDs - these values should be replaced with the corresponding user Names
 						return View(await context.Feedback.Where(f => memberIds.Contains(f.TargetUser)).ToListAsync());
 						}
 					// Return only feedback entries where the target user is the current user and they have been approved by the team manager
@@ -227,6 +228,7 @@ namespace KudosDash.Controllers
 			if (feedback != null)
 				{
 				context.Feedback.Remove(feedback);
+				_logger.LogInformation("Feedback record {F} deleted at {DT} by {u}", id, DateTime.UtcNow, User);
 				}
 
 			await context.SaveChangesAsync();
@@ -256,10 +258,14 @@ namespace KudosDash.Controllers
 				{
 				feedback.ManagerApproved = true;
 				context.Feedback.Update(feedback);
+				_logger.LogInformation("Feedback record {F} made visible to target user at {DT} by {u}", id, DateTime.UtcNow, User);
+				await context.SaveChangesAsync();
+				TempData["AlertMessage"] = string.Format("Feedback approved for {0} to view.", context.Account.Where(u => u.Id == feedback.TargetUser).FirstOrDefault().FirstName);
 				}
-
-			await context.SaveChangesAsync();
-			TempData["AlertMessage"] = "Feedback approved for user viewing.";
+			else
+				{
+				TempData["AlertMessage"] = "Feedback could not be approved. Please try again.";
+				}
 			return RedirectToAction(nameof(Index));
 			}
 

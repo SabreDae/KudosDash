@@ -10,12 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KudosDash.Controllers
 	{
-	public class AccountController (SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ApplicationDbContext context) : Controller
+	public class AccountController (SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, ApplicationDbContext context, ILogger<AccountController> logger) : Controller
 		{
 		private readonly SignInManager<AppUser> _signInManager = signInManager;
 		private readonly UserManager<AppUser> _userManager = userManager;
 		private readonly ApplicationDbContext _context = context;
-		private readonly ILogger _logger;
+		private readonly ILogger _logger = logger;
 
 		[HttpGet]
 		public IActionResult Login ()
@@ -41,6 +41,8 @@ namespace KudosDash.Controllers
 					// Else, redirect the user to their own Feedback Dashboard
 					return RedirectToAction("Index", "Feedback");
 					}
+				// Log all incorrect login attempts to provide an indication of brute force attempts
+				_logger.LogWarning("User: {0}, invalid login attempt at {1}", model.Email, DateTime.UtcNow);
 				ModelState.AddModelError("", "Login details were incorrect.");
 				}
 			return View(model);
@@ -84,6 +86,10 @@ namespace KudosDash.Controllers
 					{
 					await _userManager.AddToRoleAsync(user, model.Role);
 					await _signInManager.SignInAsync(user, false);
+					if (model.Role == "Manager")
+						{
+						TempData["AlertMessage"] = "Don't forget to create your team!";
+						}
 					return RedirectToAction("Index", "Home");
 					}
 				foreach (var error in result.Errors)
@@ -101,7 +107,7 @@ namespace KudosDash.Controllers
 		public async Task<IActionResult> Details ()
 			{
 			// userId should always exist as unauthenticated users will be redirected to log into an account, all accounts have an Id
-			var userId = _userManager.GetUserId(HttpContext.User);
+			var userId = _userManager.GetUserId(User);
 			var user = await _context.Account
 				.FirstOrDefaultAsync(m => m.Id == userId);
 
@@ -144,7 +150,7 @@ namespace KudosDash.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Details (AccountVM model)
 			{
-			var userId = _userManager.GetUserId(HttpContext.User);
+			var userId = _userManager.GetUserId(User);
 			var user = await _userManager.FindByIdAsync(userId);
 
 			if (user == null)
@@ -177,6 +183,7 @@ namespace KudosDash.Controllers
 				if (result.Succeeded)
 					{
 					await _context.SaveChangesAsync();
+					_logger.LogInformation("User updated {acc} at {DT}.", userId, DateTime.UtcNow);
 					return View(model);
 					}
 				}
@@ -246,6 +253,7 @@ namespace KudosDash.Controllers
 					{
 					// Handle a successful delete by ensuring no user is marked as logged in and redirecting to Home
 					await _signInManager.SignOutAsync();
+					_logger.LogInformation("User deleted account {Acc} at {DT}", id, DateTime.UtcNow);
 					TempData["AlertMessage"] = "Account successfully deleted!";
 					return RedirectToAction("Index", "Home");
 					}
