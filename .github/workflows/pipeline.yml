@@ -8,24 +8,23 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-     runs-on: ubuntu-latest
 
-     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.x
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore
-        # Ensure any unit-tests are run during application build
-      - name: Test
-        # FIXME: update below command with directory details when unittests have been created
-        run: dotnet test --no-build --verbosity normal
-# TODO: Add integration/security testing stage
+  e2e-test:
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:latest
+      options: --user 1001
+  
+    steps:
+     - uses: actions/checkout@v3
+     - uses: cypress-io/github-action@v6
+       with:
+         browser: chrome
+         
+         start: npm run cd KudosDash && dotnet run
+         wait-on: 'https://localhost:7197'
+         spec: cypress/e2e/**.Spec.cy.js
+
   deploy:
     runs-on: ubuntu-latest
 
