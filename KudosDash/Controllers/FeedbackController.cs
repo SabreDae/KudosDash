@@ -47,6 +47,8 @@ namespace KudosDash.Controllers
 						// TODO: Manager sees user IDs - these values should be replaced with the corresponding user Names
 						return View(await context.Feedback.Where(f => memberIds.Contains(f.TargetUser)).ToListAsync());
 						}
+					// Create a list of records that have been created by the logged in user - this populates a table to allow the user to edit feedback they submitted
+					ViewBag.UserSubmittedFeedback = context.Feedback.Where(f => f.Author == currentUser).ToList();
 					// Return only feedback entries where the target user is the current user and they have been approved by the team manager
 					return View(await context.Feedback.Where(f => f.TargetUser == currentUser && f.ManagerApproved == true).ToListAsync());
 					}
@@ -108,7 +110,6 @@ namespace KudosDash.Controllers
 			// Set date by default to current date
 			Feedback model = new()
 				{
-				Users = context.Users.ToList(),
 				FeedbackDate = DateTime.Now,
 				};
 			return View(model);
