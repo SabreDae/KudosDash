@@ -20,7 +20,9 @@ jobs:
        with:
          browser: chrome
          start: dotnet run --project KudosDash/KudosDash.csproj
-         spec: Cypress/e2e/**.Spec.cy.js
+         wait-on: "http://localhost:5289/"
+         wait-on-timeout: 240
+         spec: KudosDash.Tests/Cypress/e2e/**.Spec.cy.js
 
   deploy:
     runs-on: ubuntu-latest
