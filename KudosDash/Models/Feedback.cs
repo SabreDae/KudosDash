@@ -8,7 +8,7 @@ namespace KudosDash.Models
 	public class Feedback
 		{
 		[Key]
-		public int ID { get; set; }
+		public int Id { get; set; }
 
 		[ForeignKey("AppUser")]
 		public string? Author { get; set; }
@@ -17,8 +17,6 @@ namespace KudosDash.Models
 		[ForeignKey("AppUser")]
 		[DisplayName("User")]
 		public string? TargetUser { get; set; }
-
-		public virtual AppUser? User { get; set; }
 
 		[DataType(DataType.Date)]
 		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -34,5 +32,7 @@ namespace KudosDash.Models
 		[Required]
 		[DisplayName("Manager Approved?")]
 		public bool ManagerApproved { get; set; } = false;
+
+		public required IEnumerable<AppUser> Users { get; set; }
 		}
 	}

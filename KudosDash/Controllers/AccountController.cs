@@ -15,6 +15,7 @@ namespace KudosDash.Controllers
 		private readonly SignInManager<AppUser> _signInManager = signInManager;
 		private readonly UserManager<AppUser> _userManager = userManager;
 		private readonly ApplicationDbContext _context = context;
+		private readonly ILogger _logger;
 
 		[HttpGet]
 		public IActionResult Login ()
@@ -245,7 +246,7 @@ namespace KudosDash.Controllers
 					{
 					// Handle a successful delete by ensuring no user is marked as logged in and redirecting to Home
 					await _signInManager.SignOutAsync();
-
+					TempData["AlertMessage"] = "Account successfully deleted!";
 					return RedirectToAction("Index", "Home");
 					}
 				return View("Delete");

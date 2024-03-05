@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace KudosDash.Tests.Unit
 	{
@@ -22,7 +24,6 @@ namespace KudosDash.Tests.Unit
 	public class FeedbackControllerTests
 		{
 		private FeedbackController? _feedbackController;
-		private AccountController _accountController;
 		private ApplicationDbContext? _context;
 		private SqliteConnection? sqliteConnection;
 		private UserManager<AppUser>? _userManager;
@@ -110,52 +111,23 @@ namespace KudosDash.Tests.Unit
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			}
 
-		//[Test]
-		//public void FeedbackController_Create_ReturnsSuccess ()
-		//	{
-		//	// Arrange
-		//	_feedbackController = new FeedbackController(_context, _userManager);
-		//	var controllerContext = new ControllerContext()
-		//		{
-		//		HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-		//		};
-		//	_feedbackController.ControllerContext = controllerContext;
+		[Test]
+		public void FeedbackController_Create_ReturnsSuccess ()
+			{
+			// Arrange
+			_feedbackController = new FeedbackController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+				{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+				};
+			_feedbackController.ControllerContext = controllerContext;
 
-		// 	// Act
-		// 	var result = _feedbackController.Create();
+			// Act
+			var result = _feedbackController.Create();
 
-		// 	// Assert
-		// 	result.Status.Should().Be(TaskStatus.RanToCompletion);
-		// 	}
-
-		// [Test]
-		// public void FeedbackController_CreateNewRecord_ReturnsSuccess ()
-		// 	{
-		// 	// Arrange
-		// 	_feedbackController = new FeedbackController(_context, _userManager);
-		// 	var testUser = new Mock<ClaimsPrincipal>();
-		// 	var controllerContext = new ControllerContext()
-		// 		{
-		// 		HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true && ctx.User == testUser.Object)
-		// 		};
-		// 	_feedbackController.ControllerContext = controllerContext;
-
-		// 	var testFeedback = new Feedback
-		// 		{
-		// 		ID = 1,
-		// 		Author = "Test",
-		// 		TargetUser = "TestUser",
-		// 		FeedbackDate = DateTime.Now,
-		// 		FeedbackText = "Test",
-		// 		ManagerApproved = false,
-		// 		};
-
-		// 	// Act
-		// 	var result = _feedbackController.Create(testFeedback);
-		// 	Console.WriteLine(result);
-		// 	// Assert
-		// 	result.Status.Should().Be(TaskStatus.RanToCompletion);
-		// 	}
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			}
 
 		[Test]
 		public void FeedbackController_Details_ReturnsSuccess ()
@@ -206,6 +178,25 @@ namespace KudosDash.Tests.Unit
 
 			// Act
 			var result = _feedbackController.Delete(1);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			}
+
+		[Test]
+		public void FeedbackController_ManagerApproved_ReturnsSuccess ()
+			{
+			// Arrange
+			_feedbackController = new FeedbackController(_context, _userManager);
+			var controllerContext = new ControllerContext()
+				{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
+				};
+			_feedbackController.ControllerContext = controllerContext;
+			_feedbackController.TempData = A.Fake<TempDataDictionary>();
+
+			// Act
+			var result = _feedbackController.ManagerApproved(1);
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);

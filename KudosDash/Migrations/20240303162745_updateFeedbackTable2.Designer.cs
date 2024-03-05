@@ -3,6 +3,7 @@ using System;
 using KudosDash.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KudosDash.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240303162745_updateFeedbackTable2")]
+    partial class updateFeedbackTable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
@@ -41,7 +44,12 @@ namespace KudosDash.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UsersId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsersId");
 
                     b.ToTable("Feedback");
                 });
@@ -121,9 +129,6 @@ namespace KudosDash.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("FeedbackId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -169,8 +174,6 @@ namespace KudosDash.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FeedbackId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -312,12 +315,17 @@ namespace KudosDash.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("KudosDash.Models.Feedback", b =>
+                {
+                    b.HasOne("KudosDash.Models.Users.AppUser", "Users")
+                        .WithMany()
+                        .HasForeignKey("UsersId");
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("KudosDash.Models.Users.AppUser", b =>
                 {
-                    b.HasOne("KudosDash.Models.Feedback", null)
-                        .WithMany("Users")
-                        .HasForeignKey("FeedbackId");
-
                     b.HasOne("KudosDash.Models.Teams", "Team")
                         .WithMany("AppUsers")
                         .HasForeignKey("TeamId");
@@ -374,11 +382,6 @@ namespace KudosDash.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("KudosDash.Models.Feedback", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("KudosDash.Models.Teams", b =>

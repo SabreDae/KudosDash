@@ -145,6 +145,36 @@ namespace KudosDash.Tests.Unit
 			}
 
 		[Test]
+		public void AccountController_Register_DuplicateEmail_ReturnsFailure ()
+			{
+			// Arrange
+			_accountController = new AccountController(_signInManager, _userManager, _context);
+
+			// Simulate user input
+			var testUser = new RegisterVM
+				{
+				FirstName = "Test 2",
+				LastName = "Test Last",
+				TeamId = null,
+				Role = "Manager",
+				Email = "test@test.com",
+				Password = "Test-5678",
+				ConfirmPassword = "Test-5678"
+				};
+
+			// Register 1st user
+			_ = _accountController.Register(testUser);
+			var userCount = _context.Account.Count();
+
+			// Act 
+			var result = _accountController.Register(testUser);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.Faulted);
+			_context.Account.Count().Should().Be(userCount);
+			}
+
+		[Test]
 		public void AccountController_Register_NewUser_UnconfirmedPassword ()
 			{
 			// Arrange

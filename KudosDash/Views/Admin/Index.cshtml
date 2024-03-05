@@ -74,7 +74,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().ID)</th>
+                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().Id)</th>
                 <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().Author)</th>
                 <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().TargetUser)</th>
                 <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().FeedbackDate)</th>
@@ -87,15 +87,15 @@
             @foreach (var feedback in Model.FeedbackCol)
                 {
                 <tr>
-                    <td>@feedback.ID</td>
+                    <td>@feedback.Id</td>
                     <td>@feedback.Author</td>
                     <td>@feedback.TargetUser</td>
                     <td>@feedback.FeedbackDate</td>
                     <td>@feedback.FeedbackText</td>
                     <td>@feedback.ManagerApproved</td>
                     <td>
-                        <a type="submit" asp-controller="Feedback" asp-action="Edit" asp-route-id="@feedback.ID" class="btn btn-sm btn-secondary">Edit</a>
-                        <a type="submit" asp-controller="Feedback" asp-action="Delete" asp-route-id="@feedback.ID" class="btn btn-sm btn-danger">Delete</a>
+                        <a type="submit" asp-controller="Feedback" asp-action="Edit" asp-route-id="@feedback.Id" class="btn btn-sm btn-secondary">Edit</a>
+                        <a type="submit" asp-controller="Feedback" asp-action="Delete" asp-route-id="@feedback.Id" class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
                 }

@@ -26,6 +26,13 @@
         </nav>
     </header>
     <div class="container-fluid">
+        @if (TempData["AlertMessage"] != null)
+            {
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                @TempData["AlertMessage"]
+                <span type="button" class="close float-end" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </div>
+            }
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

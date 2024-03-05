@@ -3,6 +3,7 @@ using System;
 using KudosDash.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KudosDash.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240303154123_updateFeedbackPK")]
+    partial class updateFeedbackPK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
@@ -315,7 +318,7 @@ namespace KudosDash.Migrations
             modelBuilder.Entity("KudosDash.Models.Users.AppUser", b =>
                 {
                     b.HasOne("KudosDash.Models.Feedback", null)
-                        .WithMany("Users")
+                        .WithMany("User")
                         .HasForeignKey("FeedbackId");
 
                     b.HasOne("KudosDash.Models.Teams", "Team")
@@ -378,7 +381,7 @@ namespace KudosDash.Migrations
 
             modelBuilder.Entity("KudosDash.Models.Feedback", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("KudosDash.Models.Teams", b =>
