@@ -16,11 +16,10 @@ jobs:
        uses: actions/setup-dotnet@v3
        with:
          dotnet-version: 8.0.x
-     - name: Start server
-       run: cd KudosDash && dotnet run
      - uses: cypress-io/github-action@v6
        with:
          browser: chrome
+         start: npm run cd KudosDash && dotnet run
          wait-on: 'https://localhost:7197'
          spec: cypress/e2e/**.Spec.cy.js
 
