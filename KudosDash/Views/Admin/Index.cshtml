@@ -1,5 +1,7 @@
 ﻿@model KudosDash.Models.AdminVM;
-
+@using KudosDash.Models.Users
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> userManager
 @{
     ViewData["Title"] = "Index";
 }
@@ -19,6 +21,7 @@
                 <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().TeamId)</th>
                 <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().CreationTimestamp)</th>
                 <th>@Html.DisplayNameFor(m => Model.Users.FirstOrDefault().AccessFailedCount)</th>
+                <th>Role</th>
                 <th></th>
             </tr>
         </thead>
@@ -33,11 +36,11 @@
                     <td>@user.EmailConfirmed</td>
                     <td>@user.UserName</td>
                     <td>@user.TeamId</td>
-                <td>@user.CreationTimestamp</td>
+                    <td>@user.CreationTimestamp</td>
                     <td>@user.AccessFailedCount</td>
+                    <td>@string.Join(",", userManager.GetRolesAsync(user).Result.ToArray())</td>
                     <td>
-                    <a class="btn btn-sm btn-secondary">Edit</a>
-                    <a class="btn btn-sm btn-danger">Delete</a>
+                        <a asp-controller="Admin" asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
                 }
@@ -49,6 +52,7 @@
             <tr>
                 <th>@Html.DisplayNameFor(m => Model.Teams.FirstOrDefault().TeamId)</th>
                 <th>@Html.DisplayNameFor(m => Model.Teams.FirstOrDefault().TeamName)</th>
+                <th>Manager</th>
                 <th>Number of Members</th>
                 <th></th>
             </tr>
@@ -59,6 +63,9 @@
                 <tr>
                     <td>@team.TeamId</td>
                     <td>@team.TeamName</td>
+                    <td>
+                        @string.Join(",", Model.Users.Where(u => userManager.GetRolesAsync(u).Result.ToArray().First() == "Manager" && u.TeamId == team.TeamId).ToList())
+                    </td>
                     <td>
                         @Model.Users.Where(u => u.TeamId == team.TeamId).Count()
                     </td>

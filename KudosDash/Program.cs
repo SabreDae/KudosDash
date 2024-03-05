@@ -1,6 +1,7 @@
 using KudosDash.Data;
 using KudosDash.Models.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,7 +56,17 @@ namespace KudosDash
 				}
 			else
 				{
-				app.UseExceptionHandler("/Home/Error");
+				//Log all errors in the application
+				app.UseExceptionHandler(errorApp =>
+				{
+					errorApp.Run(async context =>
+					{
+						var errorFeature = context.Features.Get<IExceptionHandlerFeature>();
+						var exception = errorFeature.Error;
+
+						Console.WriteLine(String.Format("Stacktrace of error: {0}", exception.StackTrace.ToString()));
+					});
+				});
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 				}

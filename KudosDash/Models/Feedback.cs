@@ -1,5 +1,4 @@
-﻿using KudosDash.Models.Users;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,7 +31,5 @@ namespace KudosDash.Models
 		[Required]
 		[DisplayName("Manager Approved?")]
 		public bool ManagerApproved { get; set; } = false;
-
-		public required IEnumerable<AppUser> Users { get; set; }
 		}
 	}

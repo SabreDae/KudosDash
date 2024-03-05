@@ -33,8 +33,4 @@
     <ProjectReference Include="..\KudosDash\KudosDash.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Cypress\security\" />
-  </ItemGroup>
-
 </Project>

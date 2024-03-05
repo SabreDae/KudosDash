@@ -1,10 +1,10 @@
 ﻿describe("Test User Registration", function () {
     it("Registration page is accessible", function () {
-        cy.visit("https://localhost:7197/Account/Register")
+        cy.visit("http://localhost:5289/Account/Register")
     })
 
     it("should show validation errors when no information was entered", function () {
-        cy.visit("https://localhost:7197/Account/Register")
+        cy.visit("http://localhost:5289/Account/Register")
         cy.get("input[value='Register']").click()
         // Verify all errors show
         cy.get("#FirstName-error").should("be.visible").and("contain", "The First Name field is required.")
@@ -16,14 +16,14 @@
     })
 
     it("should show email validation error on incorrectly formatted input", function () {
-        cy.visit("https://localhost:7197/Account/Register")
+        cy.visit("http://localhost:5289/Account/Register")
         cy.get("#Email").type("HelloWorld")
         cy.get("#Password").click()
         cy.get("#Email-error").should("be.visible").and("contain", "Please enter a valid email address.")
     })
 
     it("should show mismatched passwords error", function () {
-        cy.visit("https://localhost:7197/Account/Register")
+        cy.visit("http://localhost:5289/Account/Register")
         cy.get("#Password").type("Test1234")
         cy.get("#ConfirmPassword").type("Test")
         cy.get("#LastName").click()
@@ -31,7 +31,7 @@
     })
 
     it("should show errors for password complexity", function () {
-        cy.visit("https://localhost:7197/Account/Register")
+        cy.visit("http://localhost:5289/Account/Register")
         cy.get("#FirstName").type("Alfie")
         cy.get("#LastName").type("Test")
         cy.get("#Role").select(3)
@@ -42,16 +42,4 @@
         cy.get(".validation-summary-errors").should("contain", "Passwords must be at least 8 characters.")
         cy.get(".validation-summary-errors").should("contain", "Passwords must have at least one digit ('0'-'9').")
     })
-
-    //it("should fail if user already exists", function () {
-    //    cy.visit("https://localhost:7197/Account/Register")
-    //    cy.get("#FirstName").type("Alfie")
-    //    cy.get("#LastName").type("Test")
-    //    cy.get("#Role").select(3)
-    //    cy.get("#Email").type("test@test.com")
-    //    cy.get("#Password").type("Test1234")
-    //    cy.get("#ConfirmPassword").type("Test1234")
-    //    cy.get("input[value='Register']").click()
-    //    cy.get(".validation-summary-errors").should("contain", "Username 'test@test.com' is already taken.")
-    //})
 })
