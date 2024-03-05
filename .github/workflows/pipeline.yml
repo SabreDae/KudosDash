@@ -22,7 +22,9 @@ jobs:
        with:
          browser: chrome
          wait-on: 'http://localhost:5289'
-         spec: cypress/e2e/**.Spec.cy.js
+         # wait for 3 minutes for the server to respond
+         wait-on-timeout: 180
+         spec: Cypress/e2e/**.Spec.cy.js
 
   deploy:
     runs-on: ubuntu-latest
