@@ -16,11 +16,10 @@ jobs:
        uses: actions/setup-dotnet@v3
        with:
          dotnet-version: 8.0.x
-     - name: Run Cypress
      - uses: cypress-io/github-action@v6
        with:
          browser: chrome
-         start: dotnet run --project ./KudosDash/KudosDash.csproj
+         start: dotnet run --project KudosDash/KudosDash.csproj
          spec: Cypress/e2e/**.Spec.cy.js
 
   deploy:
