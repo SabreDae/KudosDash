@@ -16,18 +16,18 @@ using Moq;
 using NUnit.Framework;
 
 namespace KudosDash.Tests.Unit
-	{
+{
 	[TestFixture]
 	public class AdminControllerTest
-		{
+	{
 
 		private AdminController? _adminController;
 		private ApplicationDbContext? _context;
 		private SqliteConnection? sqliteConnection;
 
 		[SetUp]
-		public void SetUp ()
-			{
+		public void SetUp()
+		{
 			// Build service colection to create identity UserManager and RoleManager.           
 			IServiceCollection serviceCollection = new ServiceCollection();
 
@@ -50,27 +50,27 @@ namespace KudosDash.Tests.Unit
 				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
 			IConfigurationRoot configuration = builder.Build();
-			}
+		}
 
 		[TearDown]
-		public void TearDown ()
-			{
+		public void TearDown()
+		{
 			_context.Database.EnsureDeleted();
 			_context.Dispose();
 			sqliteConnection.Close();
-			}
+		}
 
 		[Test]
-		public void AdminController_Index_ReturnsSuccess ()
-			{
+		public void AdminController_Index_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AdminController>>();
 			ILogger<AdminController> logger = mock.Object;
 			_adminController = new AdminController(_context, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
+			};
 			_adminController.ControllerContext = controllerContext;
 
 			// Act
@@ -78,19 +78,19 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-			}
+		}
 
 		[Test]
-		public void AdminController_Delete_ReturnsSuccess ()
-			{
+		public void AdminController_Delete_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AdminController>>();
 			ILogger<AdminController> logger = mock.Object;
 			_adminController = new AdminController(_context, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
+			};
 			_adminController.ControllerContext = controllerContext;
 
 			// Act
@@ -98,19 +98,19 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test]
-		public void AdminController_DeleteConfirmed_ReturnsSuccess ()
-			{
+		public void AdminController_DeleteConfirmed_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AdminController>>();
 			ILogger<AdminController> logger = mock.Object;
 			_adminController = new AdminController(_context, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
+			};
 			_adminController.ControllerContext = controllerContext;
 			_adminController.TempData = A.Fake<TempDataDictionary>();
 
@@ -119,6 +119,6 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
 		}
 	}
+}

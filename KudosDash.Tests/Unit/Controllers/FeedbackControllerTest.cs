@@ -19,10 +19,10 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 
 namespace KudosDash.Tests.Unit
-	{
+{
 	[TestFixture]
 	public class FeedbackControllerTests
-		{
+	{
 		private FeedbackController? _feedbackController;
 		private ApplicationDbContext? _context;
 		private SqliteConnection? sqliteConnection;
@@ -30,8 +30,8 @@ namespace KudosDash.Tests.Unit
 		private SignInManager<AppUser>? _signInManager;
 
 		[SetUp]
-		public void SetUp ()
-			{
+		public void SetUp()
+		{
 			// Build service colection to create identity UserManager and RoleManager.           
 			IServiceCollection serviceCollection = new ServiceCollection();
 
@@ -59,11 +59,11 @@ namespace KudosDash.Tests.Unit
 			_signInManager = A.Fake<SignInManager<AppUser>>();
 
 			IConfigurationRoot configuration = builder.Build();
-			}
+		}
 
-		public static UserManager<TUser> TestUserManager<TUser> (IUserStore<TUser>? store = null) where TUser : class
+		public static UserManager<TUser> TestUserManager<TUser>(IUserStore<TUser>? store = null) where TUser : class
 			// Mock user manager as done in official Identity Repo: https://github.com/dotnet/aspnetcore/blob/main/src/Identity/test/Shared/MockHelpers.cs#L33
-			{
+		{
 			store ??= new Mock<IUserStore<TUser>>().Object;
 			var options = new Mock<IOptions<IdentityOptions>>();
 			var idOptions = new IdentityOptions();
@@ -83,27 +83,27 @@ namespace KudosDash.Tests.Unit
 			validator.Setup(v => v.ValidateAsync(userManager, It.IsAny<TUser>()))
 				.Returns(Task.FromResult(IdentityResult.Success)).Verifiable();
 			return userManager;
-			}
+		}
 
 		[TearDown]
-		public void TearDown ()
-			{
+		public void TearDown()
+		{
 			_context.Database.EnsureDeleted();
 			_context.Dispose();
 			sqliteConnection.Close();
-			}
+		}
 
 		[Test]
-		public void FeedbackController_Index_ReturnsSuccess ()
-			{
+		public void FeedbackController_Index_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<FeedbackController>>();
 			ILogger<FeedbackController> logger = mock.Object;
 			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
+			};
 			_feedbackController.ControllerContext = controllerContext;
 
 			// Act
@@ -111,19 +111,19 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test]
-		public void FeedbackController_Create_ReturnsSuccess ()
-			{
+		public void FeedbackController_Create_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<FeedbackController>>();
 			ILogger<FeedbackController> logger = mock.Object;
 			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
+			};
 			_feedbackController.ControllerContext = controllerContext;
 
 			// Act
@@ -131,19 +131,19 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test]
-		public void FeedbackController_Details_ReturnsSuccess ()
-			{
+		public void FeedbackController_Details_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<FeedbackController>>();
 			ILogger<FeedbackController> logger = mock.Object;
 			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
+			};
 			_feedbackController.ControllerContext = controllerContext;
 
 			// Act
@@ -151,19 +151,19 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test]
-		public void FeedbackController_Edit_ReturnsSuccess ()
-			{
+		public void FeedbackController_Edit_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<FeedbackController>>();
 			ILogger<FeedbackController> logger = mock.Object;
 			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
+			};
 			_feedbackController.ControllerContext = controllerContext;
 
 			// Act
@@ -171,19 +171,19 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test]
-		public void FeedbackController_Delete_ReturnsSuccess ()
-			{
+		public void FeedbackController_Delete_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<FeedbackController>>();
 			ILogger<FeedbackController> logger = mock.Object;
 			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
-				};
+			};
 			_feedbackController.ControllerContext = controllerContext;
 
 			// Act
@@ -191,19 +191,19 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test]
-		public void FeedbackController_ManagerApproved_NoFeedback_ReturnsSuccess ()
-			{
+		public void FeedbackController_ManagerApproved_NoFeedback_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<FeedbackController>>();
 			ILogger<FeedbackController> logger = mock.Object;
 			_feedbackController = new FeedbackController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
-				{
+			{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
-				};
+			};
 			_feedbackController.ControllerContext = controllerContext;
 			_feedbackController.TempData = A.Fake<TempDataDictionary>();
 
@@ -213,6 +213,6 @@ namespace KudosDash.Tests.Unit
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			_feedbackController.TempData["AlertMessage"].Should().Be("Feedback could not be approved. Please try again.");
-			}
 		}
 	}
+}

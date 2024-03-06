@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace KudosDash.Data
-	{
+{
 	public class ApplicationDbContext : IdentityDbContext<AppUser>
-		{
-		public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options)
+	{
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 			: base(options)
-			{
-			}
+		{
+		}
 
 		public DbSet<AppUser> Account { get; set; }
 
@@ -18,5 +18,5 @@ namespace KudosDash.Data
 
 		public DbSet<Teams> Teams { get; set; }
 		public DbSet<AccountVM> AccountVM { get; set; } = default!;
-		}
 	}
+}
