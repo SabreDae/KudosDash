@@ -100,7 +100,9 @@ namespace KudosDash.Tests.Unit
 		public void TeamsController_Create_ReturnsSuccessful ()
 			{
 			// Arrange
-			_teamsController = new TeamsController(_context, _userManager);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
 
 			// Act
 			var result = _teamsController.Create();
@@ -113,7 +115,9 @@ namespace KudosDash.Tests.Unit
 		public void TeamsController_Create_NewTeam_ReturnsSuccessful ()
 			{
 			// Arrange
-			_teamsController = new TeamsController(_context, _userManager);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -138,7 +142,9 @@ namespace KudosDash.Tests.Unit
 		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure ()
 			{
 			// Arrange
-			_teamsController = new TeamsController(_context, _userManager);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -161,8 +167,12 @@ namespace KudosDash.Tests.Unit
 		public void TeamsController_Create_ManagerRole_ReturnsSuccess ()
 			{
 			// Arrange
-			_teamsController = new TeamsController(_context, _userManager);
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> Tlogger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, Tlogger);
+			var mockALogger = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mockALogger.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
@@ -205,7 +215,9 @@ namespace KudosDash.Tests.Unit
 		public void TeamsController_Index_ReturnsSuccess ()
 			{
 			// Arrange
-			_teamsController = new TeamsController(_context, _userManager);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -222,7 +234,9 @@ namespace KudosDash.Tests.Unit
 		[Test]
 		public void TeamsController_Details_ReturnsSuccess ()
 			{
-			_teamsController = new TeamsController(_context, _userManager);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -248,7 +262,9 @@ namespace KudosDash.Tests.Unit
 		[Test]
 		public void TeamsController_Edit_ReturnsSuccess ()
 			{
-			_teamsController = new TeamsController(_context, _userManager);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -273,7 +289,9 @@ namespace KudosDash.Tests.Unit
 		[Test]
 		public void TeamsController_Delete_ReturnsSuccess ()
 			{
-			_teamsController = new TeamsController(_context, _userManager);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
@@ -298,7 +316,9 @@ namespace KudosDash.Tests.Unit
 		[Test]
 		public void TeamsController_DeleteConfirmed_ReturnsSuccess ()
 			{
-			_teamsController = new TeamsController(_context, _userManager);
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
 			var controllerContext = new ControllerContext()
 				{
 				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)

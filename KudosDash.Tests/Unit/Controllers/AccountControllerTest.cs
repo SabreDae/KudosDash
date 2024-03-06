@@ -97,7 +97,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Register_ReturnsSuccess ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Act
 			var result = _accountController.Register();
@@ -110,7 +112,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Login_ReturnsSuccess ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Act
 			var result = _accountController.Login();
@@ -123,7 +127,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Register_NewUser_Success ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Simulate user input
 			var testUser = new RegisterVM
@@ -148,7 +154,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Register_DuplicateEmail_ReturnsFailure ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Simulate user input
 			var testUser = new RegisterVM
@@ -178,7 +186,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Register_NewUser_UnconfirmedPassword ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 			// Simulate user input
 			var testUser = new RegisterVM
 				{
@@ -204,9 +214,11 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Login_UserSuccess ()
 			{
 			// Arrange
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
 			var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(Enumerable.Empty<Claim>()));
 
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Create new user
 			var testUser = new AppUser()
@@ -238,7 +250,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Details_NoUser_ReturnsFailure ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Act - Attempt to get Details page with no authenticated user logged in
 			var result = _accountController.Details();
@@ -251,7 +265,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Details_AuthUser_ReturnsSuccess ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Create new user
 			var testUser = new AppUser()
@@ -289,7 +305,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Details_Change_ReturnsSuccess ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Create new user
 			var testUser = new AppUser()
@@ -339,7 +357,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Delete_NoUser_ReturnsFailure ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Act - Attempt to get Details page with no authenticated user logged in
 			var result = _accountController.Delete();
@@ -352,7 +372,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_Delete_AuthUser_ReturnsSuccess ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Create new user
 			var testUser = new AppUser()
@@ -391,7 +413,9 @@ namespace KudosDash.Tests.Unit
 		public void AccountController_ActionDelete_ReturnsSuccess ()
 			{
 			// Arrange
-			_accountController = new AccountController(_signInManager, _userManager, _context);
+			var mock = new Mock<ILogger<AccountController>>();
+			ILogger<AccountController> logger = mock.Object;
+			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 
 			// Create new user
 			var testUser = new AppUser()
