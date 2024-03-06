@@ -18,10 +18,10 @@ using NUnit.Framework;
 using System.Security.Claims;
 
 namespace KudosDash.Tests.Unit
-	{
+{
 	[TestFixture]
 	public class AccountControllerTests
-		{
+	{
 
 		private AccountController? _accountController;
 		private SignInManager<AppUser>? _signInManager;
@@ -30,8 +30,8 @@ namespace KudosDash.Tests.Unit
 		private SqliteConnection? sqliteConnection;
 
 		[SetUp]
-		public void SetUp ()
-			{
+		public void SetUp()
+		{
 			// Build service colection to create identity UserManager and RoleManager.           
 			IServiceCollection? serviceCollection = new ServiceCollection();
 
@@ -59,19 +59,19 @@ namespace KudosDash.Tests.Unit
 			_signInManager = A.Fake<SignInManager<AppUser>>();
 
 			IConfigurationRoot? configuration = builder.Build();
-			}
+		}
 
 		[TearDown]
-		public void TearDown ()
-			{
+		public void TearDown()
+		{
 			_context.Database.EnsureDeleted();
 			_context.Dispose();
 			sqliteConnection.Close();
-			}
+		}
 
-		public static UserManager<TUser> TestUserManager<TUser> (IUserStore<TUser>? store = null) where TUser : class
+		public static UserManager<TUser> TestUserManager<TUser>(IUserStore<TUser>? store = null) where TUser : class
 			// Mock user manager as done in official Identity Repo: https://github.com/dotnet/aspnetcore/blob/main/src/Identity/test/Shared/MockHelpers.cs#L33
-			{
+		{
 			store ??= new Mock<IUserStore<TUser>>().Object;
 			var options = new Mock<IOptions<IdentityOptions>>();
 			var idOptions = new IdentityOptions();
@@ -91,11 +91,11 @@ namespace KudosDash.Tests.Unit
 			validator.Setup(v => v.ValidateAsync(userManager, It.IsAny<TUser>()))
 				.Returns(Task.FromResult(IdentityResult.Success)).Verifiable();
 			return userManager;
-			}
+		}
 
 		[Test]
-		public void AccountController_Register_ReturnsSuccess ()
-			{
+		public void AccountController_Register_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -106,11 +106,11 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-			}
+		}
 
 		[Test]
-		public void AccountController_Login_ReturnsSuccess ()
-			{
+		public void AccountController_Login_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -121,11 +121,11 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Should().BeOfType<ViewResult>();
-			}
+		}
 
 		[Test]
-		public void AccountController_Register_NewUser_Success ()
-			{
+		public void AccountController_Register_NewUser_Success()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -133,7 +133,7 @@ namespace KudosDash.Tests.Unit
 
 			// Simulate user input
 			var testUser = new RegisterVM
-				{
+			{
 				FirstName = "Testing",
 				LastName = "Test",
 				TeamId = null,
@@ -141,18 +141,18 @@ namespace KudosDash.Tests.Unit
 				Email = "test@test.com",
 				Password = "Test-1234",
 				ConfirmPassword = "Test-1234"
-				};
+			};
 
 			// Act 
 			_ = _accountController.Register(testUser);
 
 			// Assert
 			_context.Account.Count().Should().Be(1);
-			}
+		}
 
 		[Test]
-		public void AccountController_Register_DuplicateEmail_ReturnsFailure ()
-			{
+		public void AccountController_Register_DuplicateEmail_ReturnsFailure()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -160,7 +160,7 @@ namespace KudosDash.Tests.Unit
 
 			// Simulate user input
 			var testUser = new RegisterVM
-				{
+			{
 				FirstName = "Test 2",
 				LastName = "Test Last",
 				TeamId = null,
@@ -168,7 +168,7 @@ namespace KudosDash.Tests.Unit
 				Email = "test@test.com",
 				Password = "Test-5678",
 				ConfirmPassword = "Test-5678"
-				};
+			};
 
 			// Register 1st user
 			_ = _accountController.Register(testUser);
@@ -180,25 +180,25 @@ namespace KudosDash.Tests.Unit
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
 			_context.Account.Count().Should().Be(userCount);
-			}
+		}
 
 		[Test]
-		public void AccountController_Register_NewUser_UnconfirmedPassword ()
-			{
+		public void AccountController_Register_NewUser_UnconfirmedPassword()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
 			_accountController = new AccountController(_signInManager, _userManager, _context, logger);
 			// Simulate user input
 			var testUser = new RegisterVM
-				{
+			{
 				FirstName = "Test",
 				LastName = "Test",
 				TeamId = null,
 				Role = "Admin",
 				Email = "test@test.com",
 				Password = "Test-1234"
-				};
+			};
 			var initialDbCount = _context.Account.Count();
 
 			// Act 
@@ -208,11 +208,11 @@ namespace KudosDash.Tests.Unit
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
 			postResultDbCount.Should().NotBe(initialDbCount);
-			}
+		}
 
 		[Test]
-		public void AccountController_Login_UserSuccess ()
-			{
+		public void AccountController_Login_UserSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -222,21 +222,21 @@ namespace KudosDash.Tests.Unit
 
 			// Create new user
 			var testUser = new AppUser()
-				{
+			{
 				FirstName = "Test",
 				LastName = "Test",
 				Email = "test@test.com",
 				UserName = "test@test.com"
-				};
+			};
 
 			_userManager.CreateAsync(testUser, "Test-1234");
 
 			var loginUser = new LoginVM()
-				{
+			{
 				Email = testUser.Email,
 				Password = "Test-1234",
 				RememberMe = false
-				};
+			};
 
 			// Act 
 			var result = _accountController.Login(loginUser);
@@ -244,11 +244,11 @@ namespace KudosDash.Tests.Unit
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 			A.CallTo(() => _signInManager.IsSignedIn(claimsPrincipal)).Returns(false);
-			}
+		}
 
 		[Test]
-		public void AccountController_Details_NoUser_ReturnsFailure ()
-			{
+		public void AccountController_Details_NoUser_ReturnsFailure()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -259,11 +259,11 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
-			}
+		}
 
 		[Test]
-		public void AccountController_Details_AuthUser_ReturnsSuccess ()
-			{
+		public void AccountController_Details_AuthUser_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -271,27 +271,27 @@ namespace KudosDash.Tests.Unit
 
 			// Create new user
 			var testUser = new AppUser()
-				{
+			{
 				FirstName = "Test",
 				LastName = "Test",
 				Email = "test@test.com",
 				UserName = "test@test.com"
-				};
+			};
 
 			_userManager.CreateAsync(testUser, "Test-1234");
 
 			var loginUser = new LoginVM()
-				{
+			{
 				Email = testUser.Email,
 				Password = "Test-1234",
 				RememberMe = false
-				};
+			};
 			_ = _accountController.Login(loginUser);
 			// Ensure HttpContext is accessible
 			_accountController.ControllerContext = new ControllerContext
-				{
+			{
 				HttpContext = new DefaultHttpContext()
-				};
+			};
 
 
 			// Act - Attempt to get Details page with authenticated user logged in
@@ -299,11 +299,11 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test]
-		public void AccountController_Details_Change_ReturnsSuccess ()
-			{
+		public void AccountController_Details_Change_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -311,36 +311,36 @@ namespace KudosDash.Tests.Unit
 
 			// Create new user
 			var testUser = new AppUser()
-				{
+			{
 				FirstName = "Test",
 				LastName = "Test",
 				Email = "test@test.com",
 				UserName = "test@test.com"
-				};
+			};
 
 			_userManager.CreateAsync(testUser, "Test-1234");
 
 			var loginUser = new LoginVM()
-				{
+			{
 				Email = testUser.Email,
 				Password = "Test-1234",
 				RememberMe = false
-				};
+			};
 
 			_ = _accountController.Login(loginUser);
 			// Ensure HttpContext is accessible
 			_accountController.ControllerContext = new ControllerContext
-				{
+			{
 				HttpContext = new DefaultHttpContext()
-				};
+			};
 
 			var newUserDetails = new AccountVM()
-				{
+			{
 				FirstName = "Test1",
 				LastName = "Test1",
 				Email = "hello@hello.co.uk",
 				TeamName = null
-				};
+			};
 
 			// Act - Attempt to get Details page with authenticated user logged in
 			var result = _accountController.Details(newUserDetails);
@@ -351,11 +351,11 @@ namespace KudosDash.Tests.Unit
 			_context.Account.Count().Should().Be(1);
 			// Verify database record is updated
 			_userManager.FindByEmailAsync(newUserDetails.Email).Should().NotBeNull();
-			}
+		}
 
 		[Test]
-		public void AccountController_Delete_NoUser_ReturnsFailure ()
-			{
+		public void AccountController_Delete_NoUser_ReturnsFailure()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -366,11 +366,11 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
-			}
+		}
 
 		[Test]
-		public void AccountController_Delete_AuthUser_ReturnsSuccess ()
-			{
+		public void AccountController_Delete_AuthUser_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -378,28 +378,28 @@ namespace KudosDash.Tests.Unit
 
 			// Create new user
 			var testUser = new AppUser()
-				{
+			{
 				FirstName = "Test",
 				LastName = "Test",
 				Email = "test@test.com",
 				UserName = "test@test.com"
-				};
+			};
 
 			_userManager.CreateAsync(testUser, "Test-1234");
 
 			var loginUser = new LoginVM()
-				{
+			{
 				Email = testUser.Email,
 				Password = "Test-1234",
 				RememberMe = false
-				};
+			};
 
 			_ = _accountController.Login(loginUser);
 			// Ensure HttpContext is accessible
 			_accountController.ControllerContext = new ControllerContext
-				{
+			{
 				HttpContext = new DefaultHttpContext()
-				};
+			};
 
 
 			// Act - Attempt to get Details page with authenticated user logged in
@@ -407,11 +407,11 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
+		}
 
 		[Test]
-		public void AccountController_ActionDelete_ReturnsSuccess ()
-			{
+		public void AccountController_ActionDelete_ReturnsSuccess()
+		{
 			// Arrange
 			var mock = new Mock<ILogger<AccountController>>();
 			ILogger<AccountController> logger = mock.Object;
@@ -419,34 +419,34 @@ namespace KudosDash.Tests.Unit
 
 			// Create new user
 			var testUser = new AppUser()
-				{
+			{
 				FirstName = "Test",
 				LastName = "Test",
 				Email = "test@test.com",
 				UserName = "test@test.com"
-				};
+			};
 
 			_userManager.CreateAsync(testUser, "Test-1234");
 
 			var loginUser = new LoginVM()
-				{
+			{
 				Email = testUser.Email,
 				Password = "Test-1234",
 				RememberMe = false
-				};
+			};
 
 			_ = _accountController.Login(loginUser);
 			// Ensure HttpContext is accessible
 			_accountController.ControllerContext = new ControllerContext
-				{
+			{
 				HttpContext = new DefaultHttpContext()
-				};
+			};
 
 			// Act - Attempt to get Delete page with authenticated user logged in
 			var result = _accountController.DeleteConfirmed();
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
-			}
 		}
 	}
+}

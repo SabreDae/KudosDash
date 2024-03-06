@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace KudosDash.Models
-	{
+{
 	public class Teams
-		{
+	{
 		[Key]
 		[DisplayName("Team ID")]
 		public int TeamId { get; set; }
@@ -16,5 +16,5 @@ namespace KudosDash.Models
 		public string? TeamName { get; set; }
 
 		public virtual ICollection<AppUser>? AppUsers { get; set; }
-		}
 	}
+}

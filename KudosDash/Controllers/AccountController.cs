@@ -260,6 +260,5 @@ namespace KudosDash.Controllers
 				return View("Delete");
 				}
 			}
-
 		}
 	}

@@ -34,7 +34,7 @@
         cy.visit("http://localhost:5289/Account/Register")
         cy.get("#FirstName").type("Alfie")
         cy.get("#LastName").type("Test")
-        cy.get("#Role").select(3)
+        cy.get("#Role").select(2)
         cy.get("#Email").type("test@test.com")
         cy.get("#Password").type("Test")
         cy.get("#ConfirmPassword").type("Test")

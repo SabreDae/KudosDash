@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KudosDash.Models.Users
-	{
+{
 	public class AppUser : IdentityUser
-		{
+	{
 
 		[Required]
 		[PersonalData]
@@ -27,5 +27,5 @@ namespace KudosDash.Models.Users
 		[DisplayName("Team ID")]
 		public int? TeamId { get; set; }
 		public virtual Teams? Team { get; set; } = null;
-		}
 	}
+}

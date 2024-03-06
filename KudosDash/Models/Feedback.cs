@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KudosDash.Models
-	{
+{
 	public class Feedback
-		{
+	{
 		[Key]
 		public int Id { get; set; }
 
@@ -31,5 +31,5 @@ namespace KudosDash.Models
 		[Required]
 		[DisplayName("Manager Approved?")]
 		public bool ManagerApproved { get; set; } = false;
-		}
 	}
+}
