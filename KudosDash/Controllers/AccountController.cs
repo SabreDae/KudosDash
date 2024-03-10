@@ -77,7 +77,7 @@ namespace KudosDash.Controllers
 					{
 					FirstName = model.FirstName,
 					LastName = model.LastName,
-					Team = model.TeamId,
+					TeamId = model.TeamId,
 					Email = model.Email,
 					UserName = model.Email
 					};
@@ -86,6 +86,8 @@ namespace KudosDash.Controllers
 
 				if (result.Succeeded)
 					{
+					// Ensure changes are saved in database
+					await _context.SaveChangesAsync();
 					await _userManager.AddToRoleAsync(user, model.Role);
 					await _signInManager.SignInAsync(user, false);
 					if (model.Role == "Manager")
