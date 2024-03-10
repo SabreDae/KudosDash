@@ -1,6 +1,5 @@
 using KudosDash.Data;
 using KudosDash.Models.Users;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -43,13 +42,17 @@ namespace KudosDash
 			builder.Services.AddControllersWithViews();
 			builder.Services.AddRazorPages();
 
-			// Cookie settings
-			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+			// Cookie settings for login session
+			builder.Services.ConfigureApplicationCookie(options =>
 			{
-				options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+				options.Cookie.Name = ".AspNetCore.Identity.Application";
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(3);
+				// After 3 minutes of inactivty, user will be auto-logged out on next request
 				options.SlidingExpiration = true;
-				options.AccessDeniedPath = "/Forbidden/";
 			});
+
+			builder.Services.AddDistributedMemoryCache();
+			builder.Services.AddSession();
 
 			var app = builder.Build();
 
@@ -85,6 +88,8 @@ namespace KudosDash
 
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+			app.UseSession();
 
 			app.MapControllerRoute(
 				name: "default",

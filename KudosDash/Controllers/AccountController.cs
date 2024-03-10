@@ -1,7 +1,5 @@
 ﻿using KudosDash.Data;
 using KudosDash.Models.Users;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -215,8 +213,6 @@ namespace KudosDash.Controllers
 		public async Task<IActionResult> Logout ()
 			{
 			await _signInManager.SignOutAsync();
-			// Clear the user's cookie
-			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			return RedirectToAction("Index", "Home");
 			}
 

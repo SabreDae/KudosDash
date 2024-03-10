@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace KudosDash.Models.Users
-{
-	public class AccountVM
 	{
+	public class AccountVM
+		{
 		public string? Id { get; set; }
 
 		[Required]
@@ -24,21 +23,5 @@ namespace KudosDash.Models.Users
 
 		[Display(Name = "Team Name")]
 		public int? TeamName { get; set; } // Note that the saved value is actually the ID of the team
-
-		[HiddenInput]
-		//[Required(ErrorMessage = "Please enter a password")]
-		[DataType(DataType.Password)]
-		public string? OldPassword { get; set; }
-
-		[HiddenInput]
-		//[Required(ErrorMessage = "Please enter a password")]
-		[DataType(DataType.Password)]
-		public string? NewPassword { get; set; }
-		[Display(Name = "Remember Me?")]
-
-		[HiddenInput]
-		//[Required(ErrorMessage = "Please enter a password")]
-		[DataType(DataType.Password)]
-		public string? ConfirmNewPassword { get; set; }
+		}
 	}
-}
