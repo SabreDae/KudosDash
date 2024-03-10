@@ -39,5 +39,5 @@
 			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
 		</Content>
 	</ItemGroup>
-
+	
 </Project>
