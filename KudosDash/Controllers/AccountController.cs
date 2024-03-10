@@ -29,7 +29,7 @@ namespace KudosDash.Controllers
 			{
 			if (ModelState.IsValid)
 				{
-				var result = await _signInManager.PasswordSignInAsync(model.Email!, model.Password, model.RememberMe, false);
+				var result = await _signInManager.PasswordSignInAsync(model.Email!, model.Password, model.RememberMe, true);
 
 				if (result.Succeeded)
 					{
@@ -44,6 +44,10 @@ namespace KudosDash.Controllers
 				// Log all incorrect login attempts to provide an indication of brute force attempts
 				_logger.LogWarning("User: {0}, invalid login attempt at {1}", model.Email, DateTime.UtcNow);
 				ModelState.AddModelError("", "Login details were incorrect.");
+				if (result.IsLockedOut)
+					{
+					return View("AccountLocked");
+					}
 				}
 			return View(model);
 			}
