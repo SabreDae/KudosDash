@@ -52,6 +52,6 @@
     const disabledFields = ["FirstName", "LastName", "Email", "TeamName"]
     updateButton.addEventListener("click", function() {
         disabledFields.forEach(field => document.getElementById(field).removeAttribute("disabled"));
-        submitButton.removeAttribute("hidden").removeAttribute("disabled")
+        submitButton.removeAttribute("hidden")
     })
 </script>
