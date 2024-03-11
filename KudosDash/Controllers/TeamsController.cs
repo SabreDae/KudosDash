@@ -187,8 +187,16 @@ namespace KudosDash.Controllers
 				var user = await userManager.GetUserAsync(User);
 				if (!IsTeamManager((int)id, user))
 					{
-					// Redirect to the correct Team view
-					return RedirectToAction("Delete", new { id = user.TeamId });
+						try 
+						{
+							// Redirect to the correct Team view if the manager has a team
+							return RedirectToAction("Delete", new { id = user.TeamId });
+						} catch
+						{
+							// Else simply redirect to Home
+							TempData["AlertMessage"] = "Sorry, we couldn't find your team! Are you sure you've created one?";
+							return RedirectToAction("Index", "Home");
+						}
 					}
 				}
 

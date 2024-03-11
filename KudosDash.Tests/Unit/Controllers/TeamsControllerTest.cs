@@ -1,4 +1,5 @@
-﻿using FakeItEasy;
+﻿using System.Net;
+using FakeItEasy;
 using FluentAssertions;
 using KudosDash.Controllers;
 using KudosDash.Data;
@@ -139,6 +140,37 @@ namespace KudosDash.Tests.Unit
 		}
 
 		[Test]
+		public void TeamsController_Create_DuplicateTeam_ReturnsFailure()
+		{
+			// Arrange
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			// Create first team 
+			_ = _teamsController.Create(team);
+
+			// Act - create second team with same name
+			var result = _teamsController.Create(new Teams() {TeamId = 2, TeamName = "Test"});
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			_teamsController.ModelState.IsValid.Should().Be(false);
+			_context.Teams.Count().Should().Be(1);
+		}
+
+		[Test]
 		public void TeamsController_Create_NewTeam_MissingField_ReturnsFailure()
 		{
 			// Arrange
@@ -161,6 +193,7 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.Faulted);
+			_context.Teams.Count().Should().Be(0);
 		}
 
 		[Test]
@@ -258,6 +291,52 @@ namespace KudosDash.Tests.Unit
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
 		}
 
+		[Test]
+		public async Task TeamsController_DetailsNoRecord_ReturnsNotFound()
+		{
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			// Act
+			var result = await _teamsController.Details(2) as NotFoundResult;
+
+			// Assert
+			result.StatusCode.Should().Be(404);
+		}
+
+		[Test]
+		public void TeamsController_DetailsNotTeamManager_ReturnsFailure()
+		{
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			var create = _teamsController.Create(team);
+
+			// Act
+			var result = _teamsController.Details(1);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.Faulted); // No logged in user
+		}
+
 
 		[Test]
 		public void TeamsController_Edit_ReturnsSuccess()
@@ -287,6 +366,52 @@ namespace KudosDash.Tests.Unit
 		}
 
 		[Test]
+		public void TeamsController_EditNotTeamManager_ReturnsFailure()
+		{
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			var create = _teamsController.Create(team);
+
+			// Act
+			var result = _teamsController.Edit(1);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.Faulted);
+		}
+
+		[Test]
+		public async Task TeamsController_EditNoRecord_ReturnsNotFound()
+		{
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			// Act
+			var result = await _teamsController.Edit(2) as NotFoundResult;
+
+			// Assert
+			result.StatusCode.Should().Be(404);
+		}
+
+		[Test]
 		public void TeamsController_Delete_ReturnsSuccess()
 		{
 			var mock = new Mock<ILogger<TeamsController>>();
@@ -311,6 +436,53 @@ namespace KudosDash.Tests.Unit
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
+		}
+
+		[Test]
+		public async Task TeamsController_DeleteNoRecord_ReturnsNotFound()
+		{
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			// Act
+			var result = await _teamsController.Delete(2) as NotFoundResult;
+
+			// Assert
+			result.StatusCode.Should().Be(404);
+		}
+
+		[Test]
+		public void TeamsController_DeleteNotTeamManager_ReturnsFailure()
+		{
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Manager") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+			_teamsController.TempData = A.Fake<TempDataDictionary>();
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			var create = _teamsController.Create(team);
+
+			// Act
+			var result = _teamsController.Delete(1);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.Faulted);
 		}
 
 		[Test]
