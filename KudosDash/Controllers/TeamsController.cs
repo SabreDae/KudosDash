@@ -40,6 +40,12 @@ namespace KudosDash.Controllers
 			if (User.IsInRole("Manager"))
 				{
 				var user = await userManager.GetUserAsync(User);
+				if (user.TeamId == null)
+					{
+						// If the manager hasn't registered a team, return them to the Home Page
+						TempData["AlertMessage"] = "You don't seem to have created a team yet."
+						return RedirectToAction("Create");
+					}
 				if (!IsTeamManager((int)id, user))
 					{
 					// Redirect to the correct Team view
@@ -120,6 +126,12 @@ namespace KudosDash.Controllers
 			if (User.IsInRole("Manager"))
 				{
 				var user = await userManager.GetUserAsync(User);
+				if (user.TeamId == null)
+					{
+						// If the manager hasn't registered a team, return them to the Home Page
+						TempData["AlertMessage"] = "You don't seem to have created a team yet."
+						return RedirectToAction("Create");
+					}
 				if (!IsTeamManager((int)id, user))
 					{
 					// Redirect to the correct Team view
@@ -212,9 +224,10 @@ namespace KudosDash.Controllers
 			var teams = await context.Teams.FindAsync(id);
 			if (teams != null)
 				{
+				Console.WriteLine("Attempting delete");
 				context.Teams.Remove(teams);
 				// Ensure references to the deleted team are removed from other tables
-				await context.SaveChangesAsync();
+				// await context.SaveChangesAsync();
 				TempData["AlertMessage"] = "Team has successfully been deleted!";
 				_logger.LogInformation("Team record {T} deleted at {DT} by {u}", id, DateTime.UtcNow, User);
 				}
