@@ -14,9 +14,9 @@
             {
             <h3>Feedback from your team!</h3>
             }
-        <table class="table">
-            <thead>
-                <tr>
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-primary">
+                    <tr>
                     @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
                         {
                         <th>
@@ -77,8 +77,8 @@
         @if (User.IsInRole("Team Member"))
             {
             <h3>Feedback you submitted!</h3>
-            <table class="table">
-                <thead>
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="table-primary">
                     <tr>
                         <th>
                             @Html.DisplayNameFor(model => model.TargetUser)
