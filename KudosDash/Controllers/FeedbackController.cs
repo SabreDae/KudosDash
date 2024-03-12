@@ -77,7 +77,7 @@ namespace KudosDash.Controllers
 				var user = await userManager.GetUserAsync(User);
 				if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
 					{
-					return View("AccessDenied");
+					return RedirectToAction("AccessDenied");
 					}
 				}
 
@@ -93,27 +93,28 @@ namespace KudosDash.Controllers
 			Task<List<AppUser>> users;
 			if (!User.IsInRole("Admin"))
 				{
+				if (currentUser.TeamId == null)
+					{
+					TempData["AlertMessage"] = "Please join a team before trying to submit feedback for colleagues!";
+					return RedirectToAction("Details", "Account");
+					}
 				// Non-admin users should only be able to create feedback for users in the same team as themselves
-				users = context.Account.Where(u => u.TeamId == currentUser.TeamId && u.TeamId != null).ToListAsync();
+				users = context.Account.Where(u => u.TeamId == currentUser.TeamId && u.Id != currentUser.Id).ToListAsync();
 				if (users.Result.Count == 0)
 					{
 					// In some instances there will be no-one to submit feedback for so return error
-					TempData["AlertMessage"] = "Please join a team before trying to submit feedback for colleagues!";
-					return RedirectToAction("Details", "Account");
+					TempData["AlertMessage"] = "Sorry, it looks like your colleagues haven't joined this team yet.";
+					return RedirectToAction("Index", "Home");
 					}
 				}
 			else
 				{
 				// Populate list of all users
-				users = context.Account.ToListAsync();
+				users = context.Account.Where(u => u.Id != currentUser.Id).ToListAsync();
 				}
 			foreach (var user in await users)
 				{
-				// Ensure user will not be able to select themselves in Target User dropdown
-				if (user.Id != currentUser.Id)
-					{
-					selectListItems.Add(new SelectListItem() { Value = user.Id, Text = user.FirstName + " " + user.LastName });
-					}
+				selectListItems.Add(new SelectListItem() { Value = user.Id, Text = user.FirstName + " " + user.LastName });
 				}
 			ViewBag.Team = selectListItems;
 			// Set date by default to current date
@@ -135,15 +136,11 @@ namespace KudosDash.Controllers
 			if (!User.IsInRole("Admin"))
 				{
 				// Non-admin users should only be able to create feedback for users in the same team as themselves
-				var users = context.Account.Where(u => u.TeamId == currentUser.TeamId).ToListAsync();
+				var users = context.Account.Where(u => u.TeamId == currentUser.TeamId && u.Id != currentUser.Id).ToListAsync();
 				List<SelectListItem> selectListItems = [];
 				foreach (var user in await users)
 					{
-					// Ensure user will not be able to select themselves in Target User dropdown
-					if (user.Id != currentUser.Id)
-						{
-						selectListItems.Add(new SelectListItem() { Value = user.Id, Text = user.FirstName + " " + user.LastName });
-						}
+					selectListItems.Add(new SelectListItem() { Value = user.Id, Text = user.FirstName + " " + user.LastName });
 					}
 				ViewBag.Team = selectListItems;
 				}
@@ -172,17 +169,33 @@ namespace KudosDash.Controllers
 				return NotFound();
 				}
 
+			var model = new EditFeedbackVM
+				{
+				Id = feedback.Id,
+				TargetUser = feedback.TargetUser,
+				FeedbackDate = feedback.FeedbackDate,
+				FeedbackText = feedback.FeedbackText,
+				};
+
 			if (!User.IsInRole("Admin"))
 				{
-				var user = await userManager.GetUserAsync(User);
+				var currentUser = await userManager.GetUserAsync(User);
 				// Check whether the feedback Author and User are the same person
-				if (feedback.Author != user.Id)
+				var users = context.Account.Where(u => u.TeamId == currentUser.TeamId && u.Id != currentUser.Id).ToListAsync();
+				List<SelectListItem> selectListItems = [];
+				foreach (var user in await users)
 					{
-					return View("AccessDenied");
+					selectListItems.Add(new SelectListItem() { Value = user.Id, Text = user.FirstName + " " + user.LastName });
+					}
+				ViewBag.TeamMembers = selectListItems;
+				if (feedback.Author != currentUser.Id)
+					{
+					// non-admin users should only be able to edit self-authored records, so redirect them to the access denied view
+					return RedirectToAction("AccessDenied");
 					}
 				}
 
-			return View(feedback);
+			return View(model);
 			}
 
 		// POST: Feedback/Edit/5
@@ -190,12 +203,18 @@ namespace KudosDash.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit (int id, [Bind("ID,Author,TargetUser,FeedbackDate,FeedbackText")] Feedback feedback)
+		public async Task<IActionResult> Edit (int id, EditFeedbackVM model)
 			{
-			if (id != feedback.Id)
+			var feedback = await context.Feedback.FirstOrDefaultAsync(f => f.Id == id);
+			if (feedback == null)
 				{
 				return NotFound();
 				}
+
+			// Get new details from view
+			feedback.FeedbackDate = model.FeedbackDate;
+			feedback.FeedbackText = model.FeedbackText;
+			feedback.ManagerApproved = false;
 
 			if (ModelState.IsValid)
 				{
@@ -240,7 +259,7 @@ namespace KudosDash.Controllers
 				var user = await userManager.GetUserAsync(User);
 				if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
 					{
-					return View("AccessDenied");
+					return RedirectToAction("AccessDenied");
 					}
 				}
 
@@ -283,6 +302,18 @@ namespace KudosDash.Controllers
 		public async Task<IActionResult> ManagerApproved (int id)
 			{
 			var feedback = await context.Feedback.FindAsync(id);
+
+			if (feedback == null)
+				{
+				return NotFound();
+				}
+
+			var user = await userManager.GetUserAsync(User);
+			if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
+				{
+				return RedirectToAction("AccessDenied");
+				}
+
 			if (feedback != null)
 				{
 				feedback.ManagerApproved = true;
@@ -295,6 +326,7 @@ namespace KudosDash.Controllers
 				{
 				TempData["AlertMessage"] = "Feedback could not be approved. Please try again.";
 				}
+
 			return RedirectToAction(nameof(Index));
 			}
 
