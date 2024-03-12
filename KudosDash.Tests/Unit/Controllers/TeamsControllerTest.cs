@@ -1,5 +1,4 @@
-﻿using System.Net;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FluentAssertions;
 using KudosDash.Controllers;
 using KudosDash.Data;
@@ -162,7 +161,7 @@ namespace KudosDash.Tests.Unit
 			_ = _teamsController.Create(team);
 
 			// Act - create second team with same name
-			var result = _teamsController.Create(new Teams() {TeamId = 2, TeamName = "Test"});
+			var result = _teamsController.Create(new Teams() { TeamId = 2, TeamName = "Test" });
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
@@ -451,7 +450,7 @@ namespace KudosDash.Tests.Unit
 			_teamsController.ControllerContext = controllerContext;
 
 			// Act
-			var result = await _teamsController.Delete(2) as NotFoundResult;
+			var result = await _teamsController.Delete(25) as NotFoundResult;
 
 			// Assert
 			result.StatusCode.Should().Be(404);
