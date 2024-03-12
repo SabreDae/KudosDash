@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace KudosDash.Models.Users
-	{
+{
 	public class AccountVM
-		{
+	{
 		public string? Id { get; set; }
 
 		[Required]
@@ -23,5 +23,5 @@ namespace KudosDash.Models.Users
 
 		[Display(Name = "Team Name")]
 		public int? TeamName { get; set; } // Note that the saved value is actually the ID of the team
-		}
 	}
+}

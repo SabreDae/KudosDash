@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace KudosDash
-	{
+{
 	public class Program
+	{
+		public static async Task Main(string[] args)
 		{
-		public static async Task Main (string[] args)
-			{
 			var builder = WebApplication.CreateBuilder(args);
 			builder.Logging.ClearProviders();
 			builder.Logging.AddConsole();
@@ -58,11 +58,11 @@ namespace KudosDash
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
-				{
+			{
 				app.UseMigrationsEndPoint();
-				}
+			}
 			else
-				{
+			{
 				//Log all errors in the application
 				app.UseExceptionHandler(errorApp =>
 				{
@@ -76,7 +76,7 @@ namespace KudosDash
 				});
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
-				}
+			}
 
 			/* HttpsRedirection is not configured here, as the hosting solution automatically redirects from HTTP to HTTPS. 
 			Setting up redirection here also causes an infinite redirect loop for the deployed application.
@@ -97,19 +97,19 @@ namespace KudosDash
 			app.MapRazorPages();
 
 			using (var scope = app.Services.CreateScope())
-				{
+			{
 				var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 				// Seed roles on App launch in every environment
 				var roles = new string[] { "Admin", "Manager", "Team Member" };
 				foreach (var role in roles)
-					{
+				{
 					if (!await roleManager.RoleExistsAsync(role))
 						// If role does not already exist, create it
 						await roleManager.CreateAsync(new IdentityRole(role));
-					}
 				}
+			}
 
 			app.Run();
-			}
 		}
 	}
+}
