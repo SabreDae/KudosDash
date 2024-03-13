@@ -1,6 +1,4 @@
-﻿import { describe, it } from "mocha";
-import { cy } from "cypress";
-describe("Test user login", function () {
+﻿describe("Test user login", function () {
     it("Login page should be up", function () {
         cy.visit("http://localhost:5289/Account/Login");
     });

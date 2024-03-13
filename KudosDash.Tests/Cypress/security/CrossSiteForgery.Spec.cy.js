@@ -1,5 +1,3 @@
-import { describe, it, expect } from "mocha";
-import { cy } from "cypress";
 describe("Cross-Site Request Forgery testing", function () {
     it("Checks for CSRF on Login, expecting a bad request response", function () {
         cy.request({

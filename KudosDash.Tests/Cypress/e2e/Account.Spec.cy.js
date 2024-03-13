@@ -1,5 +1,3 @@
-import { describe, it } from "mocha";
-import { cy } from "cypress";
 describe("Test user account details", function () {
     it("should not be available if not logged in", function () {
         cy.request({

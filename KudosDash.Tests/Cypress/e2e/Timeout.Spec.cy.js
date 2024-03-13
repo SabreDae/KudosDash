@@ -1,5 +1,3 @@
-import { describe, it } from "mocha";
-import { cy } from "cypress";
 describe("Test session timeout", function () {
     it("Should be auto-logged out after 3 minutes", function () {
         cy.clock();
