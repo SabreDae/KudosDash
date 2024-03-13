@@ -85,7 +85,7 @@ describe("Test team pages", function () {
         cy.visit("http://localhost:5289/Account/Register");
         cy.get("#FirstName").type("Test3");
         cy.get("#LastName").type("Test3");
-        cy.get("#Role").select("Team Member");
+        cy.get("#Role").select("Team Member").click(); // Click to ensure on click event is triggered
         cy.get("#TeamId").select("Test Team");
         cy.get("#Email").type("test3@test.com");
         cy.get("#Password").type("Test-1234");

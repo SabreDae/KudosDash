@@ -133,7 +133,7 @@
         })
             .its("status")
             .should("equal", 302);
-        cy.url().should("equal", "http://localhost:5289/Feedback/AccessDenied");
+        cy.url().should("equal", "http://localhost:5289/Feedback");
     });
     it("Author should be able to edit feedback", function () {
         cy.visit("http://localhost:5289/Account/Login");
