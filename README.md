@@ -73,5 +73,3 @@ Using this UI will allow you to select which browser to use to run tests, which 
 The existing Cypress tests verify the accessibility of pages, client-side validation, functionality of navigation through the site and security against certain types of cyber attacks. These tests are also executed by the pipeline associated to the master branch of the repository. 
 
 The Cypress tests are configured to use the localhost via HTTP as this is how the site is most often interacted with during development. For the tests to be executable, the localhost server must also be running. 
-
-#### test prod protection
