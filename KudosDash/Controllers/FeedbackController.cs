@@ -26,16 +26,17 @@ namespace KudosDash.Controllers
 			}
 			else
 			{
+				List<Feedback> feedbackRecords;
 				if (User.IsInRole("Admin"))
 				{
-					// Return all Feedback entries
-					return View(await context.Feedback.ToListAsync());
+					// Generate a list of all Feedback entries
+					feedbackRecords = await context.Feedback.ToListAsync();
 				}
 				else
 				{
 					if (User.IsInRole("Manager"))
 					{
-						/* Return a list of Feedback entries where the value of target user in the User table 
+						/* Generate a list of Feedback entries where the value of target user in the User table 
 						has the same teamId in the User table as the teamId of the Manager */
 						var team = context.Account.Find(userManager.GetUserId(User)).TeamId;
 						var teamMembers = await context.Account.Where(a => a.TeamId == team).ToListAsync();
@@ -44,14 +45,20 @@ namespace KudosDash.Controllers
 						{
 							memberIds.Add(member.Id);
 						}
-						// TODO: Manager sees user IDs - these values should be replaced with the corresponding user Names
-						return View(await context.Feedback.Where(f => memberIds.Contains(f.TargetUser)).ToListAsync());
+						feedbackRecords = await context.Feedback.Where(f => memberIds.Contains(f.TargetUser)).ToListAsync();
+					}
+					else 
+					{
+					// Generate a list of feedback entries where the target user is the current user and they have been approved by the team manager
+					feedbackRecords = await context.Feedback.Where(f => f.TargetUser == currentUser && f.ManagerApproved == true).ToListAsync();
 					}
 					// Create a list of records that have been created by the logged in user - this populates a table to allow the user to edit feedback they submitted
 					ViewBag.UserSubmittedFeedback = context.Feedback.Where(f => f.Author == currentUser).ToList();
-					// Return only feedback entries where the target user is the current user and they have been approved by the team manager
-					return View(await context.Feedback.Where(f => f.TargetUser == currentUser && f.ManagerApproved == true).ToListAsync());
 				}
+				var model = new FeedbackVM();
+				model.feedback = feedbackRecords;
+				model.user = await context.Account.ToListAsync();
+				return View(model);
 			}
 		}
 
@@ -64,24 +71,26 @@ namespace KudosDash.Controllers
 			{
 				return NotFound();
 			}
-
-			var feedback = await context.Feedback
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (feedback == null)
+			var requestedFeedback = context.Feedback.FirstOrDefault(m => m.Id == id);
+			if (requestedFeedback == null)
 			{
 				return NotFound();
 			}
-
+			var feedback = new List<Feedback>();
+			feedback.Add(requestedFeedback);
 			if (User.IsInRole("Manager"))
 			{
 				var user = await userManager.GetUserAsync(User);
-				if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
+				if (!FeedbackAuthorOrUserInManagersTeam(requestedFeedback, user))
 				{
 					return RedirectToAction("AccessDenied");
 				}
 			}
+			var model = new FeedbackVM();
+			model.feedback = feedback;
+			model.user = await context.Account.ToListAsync();
 
-			return View(feedback);
+			return View(model);
 		}
 
 		[HttpGet]
@@ -147,7 +156,7 @@ namespace KudosDash.Controllers
 			if (ModelState.IsValid)
 			{
 				feedback.Author = currentUser.Id;
-				context.Add(feedback);
+				var result = context.Add(feedback);
 				await context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}

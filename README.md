@@ -2,7 +2,7 @@
 
 KudosDash is an [ASP.NET](https://dotnet.microsoft.com/en-us/apps/aspnet) MVC web application built with .NET 8. The site utilises a SQLite database, [Entity Framework](https://learn.microsoft.com/en-us/ef/) and [Identity](https://learn.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity#aspnet-identity) to manage database records created and edited in the web application. 
 
-The production KudosDash POC is hosted at https://kudosdash.onrender.com. Deployment is automated via Github pipelines. 
+The production KudosDash POC is hosted at https://kudosdash.onrender.com. Deployment is automated via Github pipelines.
 
 ![Github pipeline screenshot](https://private-user-images.githubusercontent.com/102368837/311304773-215f5f55-b76a-4ab5-a738-ddd2b6761196.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDk5MTcxOTIsIm5iZiI6MTcwOTkxNjg5MiwicGF0aCI6Ii8xMDIzNjg4MzcvMzExMzA0NzczLTIxNWY1ZjU1LWI3NmEtNGFiNS1hNzM4LWRkZDJiNjc2MTE5Ni5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwMzA4JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDMwOFQxNjU0NTJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0xODNjY2E1ZjNkZDNjMjBlNDY1ZTg0ZTBkMGZlODE0N2FmYzY0ZTc4NTU3ZGIwNjdkNjQ4NDZmNmU0NjBhMDE3JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9._uPl1TRRo0wbEQSgYkxz8K6U12TZ-_afJVmG-tQja0A)
 
@@ -10,7 +10,7 @@ The production KudosDash POC is hosted at https://kudosdash.onrender.com. Deploy
 
 ### Setup
 
-1. Ensure you have an IDE with C# language support installed. You may be required to installed also .NET and NUnit plugins if this is the first ASP.NET project you're working on.
+1. Ensure you have an IDE with C# language support installed. You may be required to install also .NET and NUnit plugins if this is the first ASP.NET project you're working on.
 2. Clone the repository from Github.
 3. Install Node and NPM. See the following [guides](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) for each OS. 
 4. Install required dev dependencies from the `package.json` by running the below command. (Ensure you `cd` into the project directory at the same level as the `package.json`). 
