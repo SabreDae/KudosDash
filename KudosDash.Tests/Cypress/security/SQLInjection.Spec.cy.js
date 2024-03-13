@@ -1,6 +1,4 @@
-﻿import { describe, it } from "mocha";
-import { cy } from "cypress";
-describe("SQL injection testing", function () {
+﻿describe("SQL injection testing", function () {
     it("Checks for SQL injection vulnerability on Login Page", function () {
         cy.visit("http://localhost:5289/Account/Login?query=1 OR 1=1");
         cy.contains("Error").should("not.exist");

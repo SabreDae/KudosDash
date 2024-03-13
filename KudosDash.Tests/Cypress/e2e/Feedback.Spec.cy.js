@@ -1,7 +1,4 @@
-﻿import { describe, it } from "mocha";
-import { cy } from "cypress";
-
-describe("Test feedback pages", function () {
+﻿describe("Test feedback pages", function () {
     it("Index should not be available if not logged in", function () {
         cy.request({
             url: "http://localhost:5289/Feedback",

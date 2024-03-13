@@ -1,5 +1,3 @@
-import { describe, it } from "mocha";
-import { cy } from "cypress";
 describe("Test team pages", function () {
     it("Create page be unavailable as no user is logged in", function () {
         cy.visit("http://localhost:5289/Teams/Create");

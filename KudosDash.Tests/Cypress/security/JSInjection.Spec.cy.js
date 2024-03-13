@@ -1,6 +1,4 @@
-﻿import { describe, it } from "mocha";
-import { cy } from "cypress";
-describe("JS injection testing", function () {
+﻿describe("JS injection testing", function () {
     it("Checks for JS injection vulnerability on Login Page", function () {
         cy.visit("http://localhost:5289/Account/Login?javascript:alert(1)");
         cy.contains("Error").should("not.exist");

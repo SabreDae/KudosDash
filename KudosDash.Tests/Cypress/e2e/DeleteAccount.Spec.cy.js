@@ -1,6 +1,4 @@
-﻿import { describe, it } from "mocha";
-import { cy } from "cypress";
-describe("Test user account deletion", function () {
+﻿describe("Test user account deletion", function () {
     it("should not be available if not logged in", function () {
         cy.request({
             url: "http://localhost:5289/Account/Delete",
