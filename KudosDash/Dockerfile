@@ -10,6 +10,7 @@ WORKDIR /src
 COPY ["KudosDash/KudosDash.csproj", "KudosDash/"]
 RUN dotnet restore "./KudosDash/./KudosDash.csproj"
 COPY . .
+RUN chmod 777 ./KudosDash/database.db
 WORKDIR "/src/KudosDash"
 RUN dotnet build "./KudosDash.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
@@ -19,5 +20,6 @@ RUN dotnet publish "./KudosDash.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
 
 FROM base AS final
 WORKDIR /app
+COPY --from=build /src/KudosDash/database.db .
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "KudosDash.dll"]
