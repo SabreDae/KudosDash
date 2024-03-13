@@ -84,7 +84,7 @@
         cy.get("#TargetUser-error")
             .should("be.visible")
             .and("contain", "The User field is required.");
-        cy.get("#FeedbackText-error")
+        cy.get("#FeedbackEditor-error")
             .should("be.visible")
             .and("contain", "The Feedback field is required.");
     });
@@ -95,7 +95,7 @@
         cy.get("input[value='Login']").click();
         cy.visit("http://localhost:5289/Feedback/Create");
         cy.get("#TargetUser").select(1);
-        cy.get("#FeedbackText").type("This is a test entry.");
+        cy.get("#FeedbackEditor").type("This is a test entry.");
         cy.get("input[value='Submit Feedback']").click();
         cy.url().should("equal", "http://localhost:5289/Feedback");
         cy.contains("This is a test entry.");
