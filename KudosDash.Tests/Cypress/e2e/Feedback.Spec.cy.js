@@ -165,7 +165,7 @@
         cy.get("#Password").type("Test-1234");
         cy.get("input[value='Login']").click();
         cy.visit("http://localhost:5289/Feedback/Details/4");
-        cy.get(".check-box");
+        cy.get(".form-check-input"); // form-check is unique to the team details page
     });
     it("Team member should not be able to access Feedback Delete page", function () {
         cy.visit("http://localhost:5289/Account/Login");
