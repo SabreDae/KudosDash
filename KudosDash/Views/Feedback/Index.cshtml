@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KudosDash.Models.Feedback>
+﻿@model KudosDash.Models.FeedbackVM
 @using KudosDash.Models.Users
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<AppUser> userManager
@@ -20,17 +20,17 @@
                     @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
                         {
                         <th>
-                            @Html.DisplayNameFor(model => model.Author)
+                            Author
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.TargetUser)
+                            User
                         </th>
                         }
                     <th>
-                        @Html.DisplayNameFor(model => model.FeedbackDate)
+                        Feedback Date
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.FeedbackText)
+                        Feedback
                     </th>
                     @if (User.IsInRole("Manager"))
                         {
@@ -39,16 +39,16 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in Model.feedback)
                     {
                     <tr>
                         @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
                             {
                             <td>
-                                @item.Author
+                                @Model.user.FirstOrDefault(x => x.Id == item.Author).FirstName @Model.user.FirstOrDefault(x => x.Id == item.Author).LastName
                             </td>
                             <td>
-                                @item.TargetUser
+                                @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).LastName
                             </td>
                             }
                         <td>
@@ -81,13 +81,13 @@
                 <thead class="table-primary">
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.TargetUser)
+                            User
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.FeedbackDate)
+                            Feedback Date
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.FeedbackText)
+                            Feedback
                         </th>
                         <th></th>
                     </tr>
@@ -97,7 +97,7 @@
                         {
                         <tr>
                             <td>
-                                @item.TargetUser
+                                @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).LastName
                             </td>
                             <td>
                                 @item.FeedbackDate
