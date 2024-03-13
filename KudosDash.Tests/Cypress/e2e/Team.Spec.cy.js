@@ -81,7 +81,7 @@ describe("Test team pages", function () {
         cy.get("#Password").type("Test-1234");
         cy.get("input[value='Login']").click();
         cy.visit("http://localhost:5289/Account/Details");
-        cy.get("#TeamName").should("have.value", "3");
+        cy.get("#TeamName").should("have.value", "4");
     });
     it("New team should be available for new users", function () {
         cy.visit("http://localhost:5289/Account/Register");
@@ -94,7 +94,7 @@ describe("Test team pages", function () {
         cy.get("#ConfirmPassword").type("Test-1234");
         cy.get("input[value='Register']").click();
         cy.visit("http://localhost:5289/Account/Details");
-        cy.get("#TeamName").should("have.value", "3");
+        cy.get("#TeamName").should("have.value", "4");
     });
     it("New team should be available for existing users to join", function () {
         cy.visit("http://localhost:5289/Account/Login");
@@ -104,7 +104,7 @@ describe("Test team pages", function () {
         cy.visit("http://localhost:5289/Account/Details");
         cy.get("#updateButton").click();
         cy.get("#TeamName").select("Test Team");
-        cy.get("#TeamName").should("have.value", "3");
+        cy.get("#TeamName").should("have.value", "4");
     });
     it("Manager should be redirected to team they manage on attempt to access different team", function () {
         cy.visit("http://localhost:5289/Account/Login");
@@ -112,7 +112,7 @@ describe("Test team pages", function () {
         cy.get("#Password").type("Test-1234");
         cy.get("input[value='Login']").click();
         cy.visit("http://localhost:5289/Teams/Details/1");
-        cy.url().should("equal", "http://localhost:5289/Teams/Details/3");
+        cy.url().should("equal", "http://localhost:5289/Teams/Details/4");
     });
     it("Manager should be able to rename team", function () {
         cy.visit("http://localhost:5289/Account/Login");
@@ -120,11 +120,11 @@ describe("Test team pages", function () {
         cy.get("#Password").type("Test-1234");
         cy.get("input[value='Login']").click();
         cy.visit("http://localhost:5289/Teams/Edit/1");
-        cy.url().should("equal", "http://localhost:5289/Teams/Edit/3");
+        cy.url().should("equal", "http://localhost:5289/Teams/Edit/4");
         cy.get("#TeamName").clear();
         cy.get("#TeamName").type("Test Team 2");
         cy.get("input[value='Save']").click();
-        cy.url().should("equal", "http://localhost:5289/Teams/Details/3");
+        cy.url().should("equal", "http://localhost:5289/Teams/Details/4");
         cy.contains("Test Team 2");
     });
     it("Manager should be able to delete team and team members should have team removed from account details", function () {
@@ -132,7 +132,7 @@ describe("Test team pages", function () {
         cy.get("#Email").type("test_manager@test.com");
         cy.get("#Password").type("Test-1234");
         cy.get("input[value='Login']").click();
-        cy.visit("http://localhost:5289/Teams/Delete/3");
+        cy.visit("http://localhost:5289/Teams/Delete/4");
         cy.get("input[value='Delete']").click();
         cy.url().should("equal", "http://localhost:5289/");
         cy.get(".alert")
