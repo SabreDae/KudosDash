@@ -21,7 +21,7 @@
 
     <form asp-action="Delete">
         <input type="hidden" asp-for="TeamId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Details" asp-route-id="@Model?.TeamId">Back</a>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@Model?.TeamId">Back</a>
     </form>
 </div>
