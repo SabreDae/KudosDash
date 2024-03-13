@@ -33,11 +33,5 @@
 	<ItemGroup>
 	  <Folder Include="Data\Migrations\" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="database.db">
-			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
-		</Content>
-	</ItemGroup>
 	
 </Project>
