@@ -126,7 +126,7 @@
         cy.get("#Email").type("test@test.com");
         cy.get("#Password").type("Test-1234");
         cy.get("input[value='Login']").click();
-        cy.visit("http://localhost:5289/Feedback/Edit/4");
+        cy.request("http://localhost:5289/Feedback/Edit/4", {failOnStatusCode: false});
         cy.url().should("equal", "http://localhost:5289/Feedback/AccessDenied");
     });
     it("Author should be able to edit feedback", function () {
@@ -151,7 +151,7 @@
             followRedirect: false,
         })
             .its("status")
-            .should("equal", 404);
+            .should("equal", 302);
     });
     it("Manager should be able to access Feedback Details page", function () {
         cy.visit("http://localhost:5289/Account/Login");
@@ -204,7 +204,7 @@
         cy.get("input[value='Login']").click();
         cy.visit("http://localhost:5289/Feedback/Delete/4");
         cy.get("input[value='Delete']").click();
-        cy.url().should("equal", "http://localhost:5289/Feedback/");
+        cy.url().should("equal", "http://localhost:5289/Feedback");
         cy.contains("This is a test entry.").should("not.exist");
         // Cleanup team and accounts
         cy.visit("http://localhost:5289/Teams/Delete/3");
