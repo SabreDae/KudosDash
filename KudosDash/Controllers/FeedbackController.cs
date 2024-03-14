@@ -47,10 +47,10 @@ namespace KudosDash.Controllers
 						}
 						feedbackRecords = await context.Feedback.Where(f => memberIds.Contains(f.TargetUser)).ToListAsync();
 					}
-					else 
+					else
 					{
-					// Generate a list of feedback entries where the target user is the current user and they have been approved by the team manager
-					feedbackRecords = await context.Feedback.Where(f => f.TargetUser == currentUser && f.ManagerApproved == true).ToListAsync();
+						// Generate a list of feedback entries where the target user is the current user and they have been approved by the team manager
+						feedbackRecords = await context.Feedback.Where(f => f.TargetUser == currentUser && f.ManagerApproved == true).ToListAsync();
 					}
 					// Create a list of records that have been created by the logged in user - this populates a table to allow the user to edit feedback they submitted
 					ViewBag.UserSubmittedFeedback = context.Feedback.Where(f => f.Author == currentUser).ToList();
