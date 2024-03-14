@@ -16,7 +16,7 @@
         <dd class = "col-sm-10">
             @foreach (var item in Model.feedback)
                 {
-                @Model.user.FirstOrDefault(x => x.Id == item.Author).FirstName @Model.user.FirstOrDefault(x => x.Id == item.Author).LastName
+                <p>@Model.user.FirstOrDefault(x => x.Id == item.Author).FirstName @Model.user.FirstOrDefault(x => x.Id == item.Author).LastName</p>
                 }
         </dd>
         <dt class = "col-sm-2">
@@ -25,7 +25,7 @@
         <dd class = "col-sm-10">
             @foreach (var item in Model.feedback)
                 {
-                @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).LastName
+                <p>@Model.user.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).LastName</p>
                 }
         </dd>
         <dt class = "col-sm-2">
@@ -34,7 +34,7 @@
         <dd class = "col-sm-10">
             @foreach (var item in Model.feedback)
                 {
-                @item.FeedbackDate
+                <p>@item.FeedbackDate</p>
                 }
         </dd>
         <dt class = "col-sm-2">
@@ -43,7 +43,7 @@
         <dd class = "col-sm-10">
             @foreach (var item in Model.feedback)
                 {
-                @item.FeedbackText
+                <p>@item.FeedbackText</p>
                 }
         </dd>
         <dt class="col-sm-2">
