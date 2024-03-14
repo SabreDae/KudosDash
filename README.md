@@ -4,7 +4,7 @@ KudosDash is an [ASP.NET](https://dotnet.microsoft.com/en-us/apps/aspnet) MVC we
 
 The production KudosDash POC is hosted at https://kudosdash.onrender.com. Deployment is automated via Github pipelines.
 
-![Github pipeline screenshot](https://private-user-images.githubusercontent.com/102368837/311304773-215f5f55-b76a-4ab5-a738-ddd2b6761196.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDk5MTcxOTIsIm5iZiI6MTcwOTkxNjg5MiwicGF0aCI6Ii8xMDIzNjg4MzcvMzExMzA0NzczLTIxNWY1ZjU1LWI3NmEtNGFiNS1hNzM4LWRkZDJiNjc2MTE5Ni5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwMzA4JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDMwOFQxNjU0NTJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0xODNjY2E1ZjNkZDNjMjBlNDY1ZTg0ZTBkMGZlODE0N2FmYzY0ZTc4NTU3ZGIwNjdkNjQ4NDZmNmU0NjBhMDE3JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9._uPl1TRRo0wbEQSgYkxz8K6U12TZ-_afJVmG-tQja0A)
+![Github pipeline screenshot](https://github.com/SabreDae/KudosDash/assets/102368837/ee04ad27-d812-4495-bb69-00bbdc3ecc06)
 
 ## Development
 
@@ -36,7 +36,7 @@ Both of these options will provide a localhost URL to access the website at. Not
 
 Changes should be tested locally via unit tests and Cypress. Non-breaking changes should be pushed to the  to the [development](https://github.com/SabreDae/KudosDash/tree/development) branch.
 
-![development pipeline screenshot](https://private-user-images.githubusercontent.com/102368837/311313532-7a24deec-63fb-4694-b51f-891b7d0cfffe.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDk5MTkxMTEsIm5iZiI6MTcwOTkxODgxMSwicGF0aCI6Ii8xMDIzNjg4MzcvMzExMzEzNTMyLTdhMjRkZWVjLTYzZmItNDY5NC1iNTFmLTg5MWI3ZDBjZmZmZS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwMzA4JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDMwOFQxNzI2NTFaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1mOWJmZjA5Yzk1ZTg4MWE2OTkzZDFjZWVkMDNjOTFkOGYxN2M5ZWY3MmM3NGM3ZjlkNWFlZDI3ZGJhMWYxMjllJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.LXZa6qPu_CXzUUjjwH7z0EgOl8SnBtBb0qJrBLwsjFQ)
+![development pipeline screenshot](https://github.com/SabreDae/KudosDash/assets/102368837/c7b0d3fe-c575-451b-ad64-f9b8206eb324)
 
 Note that the master branch which deploys to Render is protected against direct pushes. Changes which pass successfully through the development pipeline, will trigger a pull request to be manually reviewed before being merged into the master branch and deployed to production.
 

@@ -121,6 +121,19 @@
         cy.visit("http://localhost:5289/Feedback/");
         cy.contains("This is a test entry.");
     });
+    it("Manager should not be able to approve feedback for user outside team", function () {
+        cy.visit("http://localhost:5289/Account/Login");
+        cy.get("#Email").type("test_manager@test.com");
+        cy.get("#Password").type("Test-1234");
+        cy.get("input[value='Login']").click();
+        cy.request({
+            url: "http://localhost:5289/Feedback/ManagerApprove/2",
+            failOnStatusCode: false,
+            followRedirect: false,
+        })
+            .its("status")
+            .should("equal", 302);
+    });
     it("User who is not author should not be able to edit feedback", function () {
         cy.visit("http://localhost:5289/Account/Login");
         cy.get("#Email").type("test@test.com");
@@ -167,6 +180,19 @@
         cy.visit("http://localhost:5289/Feedback/Details/4");
         cy.get(".form-check-input"); // form-check is unique to the team details page
     });
+    it("Manager should not be able to access Feedback Details page if target user/author is not in same team", function () {
+        cy.visit("http://localhost:5289/Account/Login");
+        cy.get("#Email").type("test_manager@test.com");
+        cy.get("#Password").type("Test-1234");
+        cy.get("input[value='Login']").click();
+        cy.request({
+            url: "http://localhost:5289/Feedback/Details/2",
+            failOnStatusCode: false,
+            followRedirect: false,
+        })
+            .its("status")
+            .should("equal", 302);
+    });
     it("Team member should not be able to access Feedback Delete page", function () {
         cy.visit("http://localhost:5289/Account/Login");
         cy.get("#Email").type("test@test.com");
@@ -202,6 +228,19 @@
         cy.get("#Password").type("Test-1234");
         cy.get("input[value='Login']").click();
         cy.visit("http://localhost:5289/Feedback/Delete/4");
+    });
+    it("Manager should not be able to delete Feedback for users/authors not in their team", function () {
+        cy.visit("http://localhost:5289/Account/Login");
+        cy.get("#Email").type("test_manager@test.com");
+        cy.get("#Password").type("Test-1234");
+        cy.get("input[value='Login']").click();
+        cy.request({
+            url: "http://localhost:5289/Feedback/Details/2",
+            failOnStatusCode: false,
+            followRedirect: false,
+        })
+            .its("status")
+            .should("equal", 302);
     });
     it("Delete request should be successful", function () {
         cy.visit("http://localhost:5289/Account/Login");
