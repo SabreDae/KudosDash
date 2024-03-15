@@ -83,6 +83,7 @@ namespace KudosDash.Controllers
 				var user = await userManager.GetUserAsync(User);
 				if (!FeedbackAuthorOrUserInManagersTeam(requestedFeedback, user))
 					{
+					_logger.LogWarning("User {U} made attempt to access unauthorized resource {F} at {DT}.", user.Email, id, DateTime.UtcNow);
 					return RedirectToAction("AccessDenied");
 					}
 				}
@@ -200,6 +201,7 @@ namespace KudosDash.Controllers
 				if (feedback.Author != currentUser.Id)
 					{
 					// non-admin users should only be able to edit self-authored records, so redirect them to the access denied view
+					_logger.LogWarning("User {U} made attempt to access unauthorized resource {F} at {DT}.", currentUser.Email, id, DateTime.UtcNow);
 					return RedirectToAction("AccessDenied");
 					}
 				}
@@ -227,22 +229,8 @@ namespace KudosDash.Controllers
 
 			if (ModelState.IsValid)
 				{
-				try
-					{
-					context.Update(feedback);
-					await context.SaveChangesAsync();
-					}
-				catch (DbUpdateConcurrencyException)
-					{
-					if (!FeedbackExists(feedback.Id))
-						{
-						return NotFound();
-						}
-					else
-						{
-						throw;
-						}
-					}
+				context.Update(feedback);
+				await context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 				}
 			return View(feedback);
@@ -268,6 +256,7 @@ namespace KudosDash.Controllers
 				var user = await userManager.GetUserAsync(User);
 				if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
 					{
+					_logger.LogWarning("User {U} made attempt to delete unauthorized resource {F} at {DT}.", user.Email, feedback.Id, DateTime.UtcNow);
 					return RedirectToAction("AccessDenied");
 					}
 				}
@@ -306,6 +295,7 @@ namespace KudosDash.Controllers
 			var user = await userManager.GetUserAsync(User);
 			if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
 				{
+				_logger.LogWarning("User {U} made attempt to access unauthorized resource {F} at {DT}.", user.Email, feedback.Id, DateTime.UtcNow);
 				return RedirectToAction("AccessDenied");
 				}
 
@@ -346,11 +336,6 @@ namespace KudosDash.Controllers
 		public IActionResult AccessDenied ()
 			{
 			return View();
-			}
-
-		private bool FeedbackExists (int id)
-			{
-			return context.Feedback.Any(e => e.Id == id);
 			}
 
 		private bool FeedbackAuthorOrUserInManagersTeam (Feedback feedback, AppUser user)
