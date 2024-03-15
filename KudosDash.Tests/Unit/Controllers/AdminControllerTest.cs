@@ -93,12 +93,47 @@ namespace KudosDash.Tests.Unit
 			};
 			_adminController.ControllerContext = controllerContext;
 
+			_context.Account.Add(new AppUser
+			{
+				Id = "test",
+				FirstName = "test",
+				LastName = "test",
+				Email = "test@test.com",
+				UserName = "test@test.com",
+				TeamId = null
+			});
+			_context.SaveChanges();
+
 			// Act
 			var result = _adminController.Delete("test");
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			_context.Account.Count().Should().Be(1);
 		}
+
+		[Test]
+		public void AdminController_DeleteMissingID_ReturnsFailure()
+		{
+			// Arrange
+			var mock = new Mock<ILogger<AdminController>>();
+			ILogger<AdminController> logger = mock.Object;
+			_adminController = new AdminController(_context, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_adminController.ControllerContext = controllerContext;
+
+			// Act
+			var result = _adminController.Delete("test");
+			var resultStatusCode = result.Result as StatusCodeResult;
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			resultStatusCode.StatusCode.Should().Be(404);
+		}
+
 
 		[Test]
 		public void AdminController_DeleteConfirmed_ReturnsSuccess()
@@ -114,11 +149,24 @@ namespace KudosDash.Tests.Unit
 			_adminController.ControllerContext = controllerContext;
 			_adminController.TempData = A.Fake<TempDataDictionary>();
 
+			_context.Account.Add(new AppUser
+			{
+				Id = "test",
+				FirstName = "test",
+				LastName = "test",
+				Email = "test@test.com",
+				UserName = "test@test.com",
+				TeamId = null
+			});
+			_context.SaveChanges();
+			var initialAccountCount = _context.Account.Count();
+
 			// Act
 			var result = _adminController.DeleteConfirmed("test");
 
 			// Assert
 			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			_context.Account.Count().Should().NotBe(initialAccountCount);
 		}
 	}
 }
