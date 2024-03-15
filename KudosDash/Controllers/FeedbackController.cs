@@ -83,6 +83,7 @@ namespace KudosDash.Controllers
 				var user = await userManager.GetUserAsync(User);
 				if (!FeedbackAuthorOrUserInManagersTeam(requestedFeedback, user))
 					{
+					_logger.LogWarning("User {U} made attempt to access unauthorized resource {F} at {DT}.", user.Email, id, DateTime.UtcNow);
 					return RedirectToAction("AccessDenied");
 					}
 				}
@@ -200,6 +201,7 @@ namespace KudosDash.Controllers
 				if (feedback.Author != currentUser.Id)
 					{
 					// non-admin users should only be able to edit self-authored records, so redirect them to the access denied view
+					_logger.LogWarning("User {U} made attempt to access unauthorized resource {F} at {DT}.", currentUser.Email, id, DateTime.UtcNow);
 					return RedirectToAction("AccessDenied");
 					}
 				}
@@ -254,6 +256,7 @@ namespace KudosDash.Controllers
 				var user = await userManager.GetUserAsync(User);
 				if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
 					{
+					_logger.LogWarning("User {U} made attempt to delete unauthorized resource {F} at {DT}.", user.Email, feedback.Id, DateTime.UtcNow);
 					return RedirectToAction("AccessDenied");
 					}
 				}
@@ -292,6 +295,7 @@ namespace KudosDash.Controllers
 			var user = await userManager.GetUserAsync(User);
 			if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
 				{
+				_logger.LogWarning("User {U} made attempt to access unauthorized resource {F} at {DT}.", user.Email, feedback.Id, DateTime.UtcNow);
 				return RedirectToAction("AccessDenied");
 				}
 
