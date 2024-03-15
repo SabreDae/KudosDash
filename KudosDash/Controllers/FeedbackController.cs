@@ -227,22 +227,8 @@ namespace KudosDash.Controllers
 
 			if (ModelState.IsValid)
 				{
-				try
-					{
-					context.Update(feedback);
-					await context.SaveChangesAsync();
-					}
-				catch (DbUpdateConcurrencyException)
-					{
-					if (!FeedbackExists(feedback.Id))
-						{
-						return NotFound();
-						}
-					else
-						{
-						throw;
-						}
-					}
+				context.Update(feedback);
+				await context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 				}
 			return View(feedback);
@@ -346,11 +332,6 @@ namespace KudosDash.Controllers
 		public IActionResult AccessDenied ()
 			{
 			return View();
-			}
-
-		private bool FeedbackExists (int id)
-			{
-			return context.Feedback.Any(e => e.Id == id);
 			}
 
 		private bool FeedbackAuthorOrUserInManagersTeam (Feedback feedback, AppUser user)
