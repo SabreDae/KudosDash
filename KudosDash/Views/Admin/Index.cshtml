@@ -72,7 +72,7 @@
                         @Model.Users.Where(u => u.TeamId == team.TeamId).Count()
                     </td>
                     <td>
-                        <a type="submit" asp-controller="Teams" asp-action="Edit" asp-route-id="@team.TeamId" class="btn btn-sm btn-secondary">Edit</a>
+                        <a type="submit" asp-controller="Teams" asp-action="Edit" asp-route-id="@team.TeamId" class="btn btn-sm btn-primary">Edit</a>
                         <a type="submit" asp-controller="Teams" asp-action="Delete" asp-route-id="@team.TeamId" class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
@@ -80,34 +80,36 @@
         </tbody>
     </table>
     <h3 class="text-uppercase p-2 text-center">Feedback Records</h3>
-    <table class="table table-striped table-hover table-bordered">
-        <thead class="table-primary">
-            <tr>
-                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().Id)</th>
-                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().Author)</th>
-                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().TargetUser)</th>
-                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().FeedbackDate)</th>
-                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().FeedbackText)</th>
-                <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().ManagerApproved)</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var feedback in Model.FeedbackCol)
-                {
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-primary">
                 <tr>
-                    <td>@feedback.Id</td>
-                    <td>@feedback.Author</td>
-                    <td>@feedback.TargetUser</td>
-                    <td>@feedback.FeedbackDate</td>
-                    <td>@feedback.FeedbackText</td>
-                    <td>@feedback.ManagerApproved</td>
-                    <td>
-                        <a type="submit" asp-controller="Feedback" asp-action="Edit" asp-route-id="@feedback.Id" class="btn btn-sm btn-primary">Edit</a>
-                        <a type="submit" asp-controller="Feedback" asp-action="Delete" asp-route-id="@feedback.Id" class="btn btn-sm btn-danger">Delete</a>
-                    </td>
+                    <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().Id)</th>
+                    <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().Author)</th>
+                    <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().TargetUser)</th>
+                    <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().FeedbackDate)</th>
+                    <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().FeedbackText)</th>
+                    <th>@Html.DisplayNameFor(m => Model.FeedbackCol.FirstOrDefault().ManagerApproved)</th>
+                    <th></th>
                 </tr>
-                }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var feedback in Model.FeedbackCol)
+                    {
+                    <tr>
+                        <td>@feedback.Id</td>
+                        <td>@feedback.Author</td>
+                        <td>@feedback.TargetUser</td>
+                        <td>@feedback.FeedbackDate</td>
+                        <td>@feedback.FeedbackText</td>
+                        <td>@feedback.ManagerApproved</td>
+                        <td>
+                            <a type="submit" asp-controller="Feedback" asp-action="Edit" asp-route-id="@feedback.Id" class="btn btn-sm btn-primary">Edit</a>
+                            <a type="submit" asp-controller="Feedback" asp-action="Delete" asp-route-id="@feedback.Id" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
 </div>  

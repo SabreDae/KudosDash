@@ -365,6 +365,36 @@ namespace KudosDash.Tests.Unit
 		}
 
 		[Test]
+		public void TeamsController_EditSubmit_ReturnsSuccess()
+		{
+			var mock = new Mock<ILogger<TeamsController>>();
+			ILogger<TeamsController> logger = mock.Object;
+			_teamsController = new TeamsController(_context, _userManager, logger);
+			var controllerContext = new ControllerContext()
+			{
+				HttpContext = Mock.Of<HttpContext>(ctx => ctx.User.IsInRole("Admin") == true)
+			};
+			_teamsController.ControllerContext = controllerContext;
+
+			var team = new Teams()
+			{
+				TeamId = 1,
+				TeamName = "Test"
+			};
+
+			var create = _teamsController.Create(team);
+
+			team.TeamName = "Changed Name";
+
+			// Act
+			var result = _teamsController.Edit(1, team);
+
+			// Assert
+			result.Status.Should().Be(TaskStatus.RanToCompletion);
+			_context.Teams.FirstOrDefault().TeamName.Should().Be("Changed Name");
+		}
+
+		[Test]
 		public void TeamsController_EditNotTeamManager_ReturnsFailure()
 		{
 			var mock = new Mock<ILogger<TeamsController>>();
