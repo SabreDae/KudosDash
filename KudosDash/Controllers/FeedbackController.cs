@@ -331,8 +331,9 @@ namespace KudosDash.Controllers
 			feedback.ManagerApproved = true;
 			try
 			{
+				var user = await userManager.GetUserAsync(User);
 				context.Feedback.Update(feedback);
-				_logger.LogInformation("Feedback record {F} made visible to target user at {DT} by {u}", id, DateTime.UtcNow, User);
+				_logger.LogInformation("Feedback record {F} made visible to target user at {DT} by {U}", id, DateTime.UtcNow, user.Email);
 				await context.SaveChangesAsync();
 				TempData["AlertMessage"] = string.Format("Feedback approved for {0} to view.", context.Account.Where(u => u.Id == feedback.TargetUser).FirstOrDefault().FirstName);
 			}

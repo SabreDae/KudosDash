@@ -218,9 +218,10 @@ namespace KudosDash.Controllers
 				{
 					member.TeamId = null;
 				}
+				var user = await userManager.GetUserAsync(User);
 				await context.SaveChangesAsync();
 				TempData["AlertMessage"] = "Team has successfully been deleted!";
-				_logger.LogInformation("Team record {T} deleted at {DT} by {u}", id, DateTime.UtcNow, User);
+				_logger.LogInformation("Team record {T} deleted at {DT} by {u}", id, DateTime.UtcNow, user);
 			}
 			if (User.IsInRole("Manager"))
 			{
