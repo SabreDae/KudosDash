@@ -10,12 +10,10 @@
   "author": "SabreDae",
   "license": "ISC",
   "dependencies": {
-    "ckeditor4": "^4.24.0",
+  },
+  "devDependencies": {
     "concurrently": "^8.2.2",
     "cypress": "^13.6.4",
     "wait-on": "^7.2.0"
-  },
-  "devDependencies": {
-    "sqlite3": "^5.1.7"
   }
 }
