@@ -57,8 +57,8 @@ namespace KudosDash.Controllers
 				}
 				var model = new FeedbackVM
 				{
-					feedback = feedbackRecords,
-					user = await context.Account.ToListAsync()
+					Feedback = feedbackRecords,
+					User = await context.Account.ToListAsync()
 				};
 				return View(model);
 			}
@@ -93,8 +93,8 @@ namespace KudosDash.Controllers
 			}
 			var model = new FeedbackVM
 			{
-				feedback = feedback,
-				user = await context.Account.ToListAsync()
+				Feedback = feedback,
+				User = await context.Account.ToListAsync()
 			};
 
 			return View(model);
@@ -299,11 +299,11 @@ namespace KudosDash.Controllers
 			}
 			var model = new FeedbackVM
 			{
-				feedback = new List<Feedback>
+				Feedback = new List<Feedback>
 				{
 				feedback
 				},
-				user = await context.Account.ToListAsync()
+				User = await context.Account.ToListAsync()
 			};
 
 			var user = await userManager.GetUserAsync(User);
