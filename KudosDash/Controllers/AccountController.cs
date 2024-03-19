@@ -40,7 +40,7 @@ namespace KudosDash.Controllers
 					return RedirectToAction("Index", "Feedback");
 				}
 				// Log all incorrect login attempts to provide an indication of brute force attempts
-				_logger.LogWarning("User: {0}, invalid login attempt at {1}", model.Email, DateTime.UtcNow);
+				_logger.LogWarning("User: {U}, invalid login attempt at {DT}", model.Email, DateTime.UtcNow);
 				ModelState.AddModelError("", "Login details were incorrect.");
 				if (result.IsLockedOut)
 				{

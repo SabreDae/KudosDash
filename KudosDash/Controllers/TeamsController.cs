@@ -30,9 +30,9 @@ namespace KudosDash.Controllers
 				return NotFound();
 			}
 
-			var teams = await context.Teams
+			var team = await context.Teams
 				.FirstOrDefaultAsync(m => m.TeamId == id);
-			if (teams == null)
+			if (team == null)
 			{
 				return NotFound();
 			}
@@ -57,7 +57,7 @@ namespace KudosDash.Controllers
 				ViewBag.Members = membersList;
 			}
 
-			return View(teams);
+			return View(team);
 		}
 
 		// GET: Teams/Create
@@ -73,9 +73,9 @@ namespace KudosDash.Controllers
 		[HttpPost]
 		[Authorize(Roles = "Admin,Manager")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("TeamId,TeamName")] Teams teams)
+		public async Task<IActionResult> Create([Bind("TeamId,TeamName")] Teams team)
 		{
-			if (TeamNameExists(teams.TeamName))
+			if (TeamNameExists(team.TeamName))
 			{
 				// Add error messages
 				ModelState.AddModelError("", "Team could not be created. Please review any errors below and try again.");
@@ -84,7 +84,7 @@ namespace KudosDash.Controllers
 
 			if (ModelState.IsValid)
 			{
-				context.Add(teams);
+				context.Add(team);
 				// Save new team in teams table
 				await context.SaveChangesAsync();
 
@@ -99,13 +99,13 @@ namespace KudosDash.Controllers
 					var user = await context.Account
 						.FirstOrDefaultAsync(m => m.Id == userId);
 
-					user.TeamId = teams.TeamId;
+					user.TeamId = team.TeamId;
 					// Save user changes
 					await context.SaveChangesAsync();
 				}
-				return RedirectToAction("Details", new { id = teams.TeamId });
+				return RedirectToAction("Details", new { id = team.TeamId });
 			}
-			return View(teams);
+			return View(team);
 		}
 
 		// GET: Teams/Edit/5
@@ -117,8 +117,8 @@ namespace KudosDash.Controllers
 				return NotFound();
 			}
 
-			var teams = await context.Teams.FindAsync(id);
-			if (teams == null)
+			var team = await context.Teams.FindAsync(id);
+			if (team == null)
 			{
 				return NotFound();
 			}
@@ -139,7 +139,7 @@ namespace KudosDash.Controllers
 				}
 			}
 
-			return View(teams);
+			return View(team);
 		}
 
 		// POST: Teams/Edit/5
@@ -148,34 +148,20 @@ namespace KudosDash.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = "Admin,Manager")]
-		public async Task<IActionResult> Edit(int id, [Bind("TeamId,TeamName")] Teams teams)
+		public async Task<IActionResult> Edit(int id, [Bind("TeamId,TeamName")] Teams team)
 		{
-			if (id != teams.TeamId)
+			if (id != team.TeamId || !TeamsExists(team.TeamId))
 			{
 				return NotFound();
 			}
 
 			if (ModelState.IsValid)
 			{
-				try
-				{
-					context.Update(teams);
-					await context.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!TeamsExists(teams.TeamId))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
-				return RedirectToAction("Details", new { id = teams.TeamId });
+				context.Update(team);
+				await context.SaveChangesAsync();
+				return RedirectToAction("Details", new { id = team.TeamId });
 			}
-			return View(teams);
+			return View(team);
 		}
 
 		// GET: Teams/Delete/5
@@ -187,9 +173,9 @@ namespace KudosDash.Controllers
 				return NotFound();
 			}
 
-			var teams = await context.Teams
+			var team = await context.Teams
 				.FirstOrDefaultAsync(m => m.TeamId == id);
-			if (teams == null)
+			if (team == null)
 			{
 				return NotFound();
 			}
@@ -213,7 +199,7 @@ namespace KudosDash.Controllers
 				}
 			}
 
-			return View(teams);
+			return View(team);
 		}
 
 		// POST: Teams/Delete/5
@@ -222,11 +208,11 @@ namespace KudosDash.Controllers
 		[Authorize(Roles = "Admin,Manager")]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var teams = await context.Teams.FindAsync(id);
-			if (teams != null)
+			var team = await context.Teams.FindAsync(id);
+			if (team != null)
 			{
 				var members = context.Account.Where(a => a.TeamId == id).ToList();
-				context.Teams.Remove(teams);
+				context.Teams.Remove(team);
 				// Ensure references to the deleted team are removed from other tables
 				foreach (var member in members)
 				{
@@ -257,7 +243,7 @@ namespace KudosDash.Controllers
 			return context.Teams.Any(m => m.TeamName == teamName);
 		}
 
-		private bool IsTeamManager(int id, AppUser user)
+		private static bool IsTeamManager(int id, AppUser user)
 		{
 			// Return boolean status for whether the user is the Manager of the requested team ID
 			return user.TeamId == id;
