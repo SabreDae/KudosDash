@@ -297,6 +297,14 @@ namespace KudosDash.Controllers
 			{
 				return NotFound();
 			}
+			var model = new FeedbackVM
+			{
+				feedback = new List<Feedback>
+				{
+				feedback
+				},
+				user = await context.Account.ToListAsync()
+			};
 
 			var user = await userManager.GetUserAsync(User);
 			if (!FeedbackAuthorOrUserInManagersTeam(feedback, user))
@@ -305,7 +313,7 @@ namespace KudosDash.Controllers
 				return RedirectToAction("AccessDenied");
 			}
 
-			return View(feedback);
+			return View(model);
 		}
 
 		[HttpPost, ActionName("ManagerApprove")]
