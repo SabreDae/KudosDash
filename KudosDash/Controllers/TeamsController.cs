@@ -30,20 +30,13 @@ namespace KudosDash.Controllers
 				return NotFound();
 			}
 
-			var team = await context.Teams
-				.FirstOrDefaultAsync(m => m.TeamId == id);
-			if (team == null)
-			{
-				return NotFound();
-			}
-
 			if (User.IsInRole("Manager"))
 			{
 				var user = await userManager.GetUserAsync(User);
 				if (user.TeamId == null)
 				{
 					// If the manager hasn't registered a team, return them to the Home Page
-					TempData["AlertMessage"] = "You don't seem to have created a team yet.";
+					TempData["AlertMessage"] = "You don't seem to have created a team yet or might have deleted your team.";
 					return RedirectToAction("Create");
 				}
 				if (!IsTeamManager((int)id, user))
@@ -55,6 +48,13 @@ namespace KudosDash.Controllers
 				// Create list of users in the same team as the manager, with the manager themself excluded
 				List<AppUser> membersList = await context.Account.Where(a => a.TeamId == id && a.Id != userId).ToListAsync();
 				ViewBag.Members = membersList;
+			} 
+
+			var team = await context.Teams
+				.FirstOrDefaultAsync(m => m.TeamId == id);
+			if (team == null)
+			{
+				return NotFound();
 			}
 
 			return View(team);

@@ -39,16 +39,16 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.feedback)
+                @foreach (var item in Model.Feedback)
                     {
                     <tr>
                         @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
                             {
                             <td>
-                                @Model.user.FirstOrDefault(x => x.Id == item.Author).FirstName @Model.user.FirstOrDefault(x => x.Id == item.Author).LastName
+                                @Model.User.FirstOrDefault(x => x.Id == item.Author).FirstName @Model.User.FirstOrDefault(x => x.Id == item.Author).LastName
                             </td>
                             <td>
-                                @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).LastName
+                                @Model.User.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.User.FirstOrDefault(x => x.Id == item.TargetUser).LastName
                             </td>
                             }
                         <td>
@@ -97,7 +97,7 @@
                         {
                         <tr>
                             <td>
-                                @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).LastName
+                                @Model.User.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.User.FirstOrDefault(x => x.Id == item.TargetUser).LastName
                             </td>
                             <td>
                                 @item.FeedbackDate

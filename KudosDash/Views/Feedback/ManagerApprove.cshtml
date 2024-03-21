@@ -11,25 +11,25 @@
         Author
     </dt>
     <dd class="col-sm-10">
-        @foreach (var item in Model.feedback)
+        @foreach (var item in Model.Feedback)
             {
-            <p>@Model.user.FirstOrDefault(x => x.Id == item.Author).FirstName @Model.user.FirstOrDefault(x => x.Id == item.Author).LastName</p>
+            <p>@Model.User.FirstOrDefault(x => x.Id == item.Author).FirstName @Model.User.FirstOrDefault(x => x.Id == item.Author).LastName</p>
             }
     </dd>
     <dt class="col-sm-2">
         User
     </dt>
     <dd class="col-sm-10">
-        @foreach (var item in Model.feedback)
+        @foreach (var item in Model.Feedback)
             {
-            <p>@Model.user.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.user.FirstOrDefault(x => x.Id == item.TargetUser).LastName</p>
+            <p>@Model.User.FirstOrDefault(x => x.Id == item.TargetUser).FirstName @Model.User.FirstOrDefault(x => x.Id == item.TargetUser).LastName</p>
             }
     </dd>
     <dt class="col-sm-2">
         Feedback Date
     </dt>
     <dd class="col-sm-10">
-        @foreach (var item in Model.feedback)
+        @foreach (var item in Model.Feedback)
             {
             <p>@item.FeedbackDate</p>
             }
@@ -38,7 +38,7 @@
         Feedback
     </dt>
     <dd class="col-sm-10">
-       @foreach (var item in Model.feedback)
+       @foreach (var item in Model.Feedback)
             {
             <p>@item.FeedbackText</p>
             }
@@ -47,7 +47,7 @@
 </div>
 <div>
     <form asp-action="ManagerApprove">
-        @foreach (var item in Model.feedback)
+        @foreach (var item in Model.Feedback)
             {
             <input type="hidden" asp-for="@item.Id" />
             }
