@@ -39,11 +39,14 @@ namespace KudosDash.Controllers
 						/* Generate a list of Feedback entries where the value of target user in the User table 
 						has the same teamId in the User table as the teamId of the Manager */
 						var team = context.Account.Find(userManager.GetUserId(User)).TeamId;
-						var teamMembers = await context.Account.Where(a => a.TeamId == team).ToListAsync();
 						List<string> memberIds = [];
-						foreach (AppUser member in teamMembers)
+						if (team != null)
 						{
-							memberIds.Add(member.Id);
+							var teamMembers = await context.Account.Where(a => a.TeamId == team).ToListAsync();
+							foreach (AppUser member in teamMembers)
+							{
+								memberIds.Add(member.Id);
+							}
 						}
 						feedbackRecords = await context.Feedback.Where(f => memberIds.Contains(f.TargetUser)).ToListAsync();
 					}
